@@ -14,12 +14,14 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     protected int maxHp;
     protected int hp;
 
+    //构造函数，初始化一个敌机
     public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY);
         this.hp = hp;
         this.maxHp = hp;
     }
 
+    //控制血量下降的方法
     public void decreaseHp(int decrease){
         hp -= decrease;
         if(hp <= 0){

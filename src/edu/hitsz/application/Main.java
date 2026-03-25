@@ -3,13 +3,12 @@ package edu.hitsz.application;
 import javax.swing.*;
 import java.awt.*;
 
-//123
 /**
  * 程序入口
  * @author hitsz
  */
 public class Main {
-
+    //设置游戏画面大小
     public static final int WINDOW_WIDTH = 512;
     public static final int WINDOW_HEIGHT = 768;
 
