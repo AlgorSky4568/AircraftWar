@@ -3,6 +3,7 @@ package edu.hitsz.application;
 import javax.swing.*;
 import java.awt.*;
 
+//123
 /**
  * 程序入口
  * @author hitsz
