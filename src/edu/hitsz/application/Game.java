@@ -88,6 +88,16 @@ public class Game extends JPanel {
                                 30
                         ));
                     }
+
+                    if (enemyAircrafts.size() < enemyMaxNumber) {
+                        enemyAircrafts.add(new EliteEnemy(
+                                (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.Elite_ENEMY_IMAGE.getWidth())),
+                                (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
+                                0,
+                                10,
+                                30
+                        ));
+                    }
                 }
 
                 // 飞机发射子弹
