@@ -1,5 +1,6 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.application.HeroController;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
 
@@ -21,10 +22,21 @@ public class HeroAircraft extends AbstractAircraft {
     //子弹射击方向 (向上发射：-1，向下发射：1)
     private int direction = -1;
 
-    public HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
+    private volatile static HeroAircraft heroAircraft;
+    private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }
 
+    public static HeroAircraft getHeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp){
+        if(heroAircraft == null){
+            synchronized (HeroAircraft.class){
+                if(heroAircraft == null){
+                    heroAircraft = new HeroAircraft(locationX, locationY, speedX, speedY, hp);
+                }
+            }
+        }
+        return heroAircraft;
+    }
     @Override
     public void forward() {
         // 英雄机由鼠标控制，不通过forward函数移动
