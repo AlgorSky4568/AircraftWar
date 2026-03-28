@@ -54,6 +54,34 @@ class MobEnemy {
 }
 AbstractAircraft <|-- MobEnemy
 
+class EliteEnemy {
+    + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+}
+AbstractAircraft <|-- EliteEnemy
+
+class ElitePlusEnemy {
+    + ElitePlusEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+}
+AbstractAircraft <|-- ElitePlusEnemy
+
+class EliteProEnemy {
+    + EliteProEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+}
+AbstractAircraft <|-- EliteProEnemy
+
+class BossEnemy {
+    + BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + forward():void
+    + shoot():List<BaseBullet>
+}
+AbstractAircraft <|-- BossEnemy
+
 abstract class BaseBullet
 {
     - power:int
@@ -78,4 +106,35 @@ BaseBullet <|-- EnemyBullet
 AbstractFlyingObject <|-- AbstractAircraft
 AbstractFlyingObject <|-- BaseBullet
 
+abstract class BaseProp
+{
+
+}
+
+class BloodProp {
+
+}
+BaseProp <|-- BloodProp
+
+class BombProp {
+
+}
+BaseProp <|-- BombProp
+
+class BulletProp {
+
+}
+BaseProp <|-- BulletProp
+
+class BulletPlusProp {
+
+}
+BaseProp <|-- BulletPlusProp
+
+class FreezeProp {
+
+}
+BaseProp <|-- FreezeProp
+
+AbstractFlyingObject <|-- BaseProp
 @enduml
