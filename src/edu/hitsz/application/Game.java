@@ -88,7 +88,7 @@ public class Game extends JPanel {
                                 30
                         ));
                     }
-
+                    //产生精英敌机
                     if (enemyAircrafts.size() < enemyMaxNumber) {
                         enemyAircrafts.add(new EliteEnemy(
                                 (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.Elite_ENEMY_IMAGE.getWidth())),
@@ -131,7 +131,10 @@ public class Game extends JPanel {
             shootCounter = 0;
             //英雄机射击
             heroBullets.addAll(heroAircraft.shoot());
-            // TODO 敌机射击
+            //  敌机射击
+            for(AbstractAircraft abstractAircraft : enemyAircrafts){
+                enemyBullets.addAll(abstractAircraft.shoot());
+            }
         }
     }
 
