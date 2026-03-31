@@ -19,6 +19,10 @@ public class HeroAircraft extends AbstractAircraft {
     //子弹威力
     private int power = 30;
 
+    //临时buff的额外威力，持续一段时间
+    private int extraPower = 0;
+    private long powerBuffEndTime = 0;
+
     //子弹射击方向 (向上发射：-1，向下发射：1)
     private int direction = -1;
 
@@ -54,13 +58,25 @@ public class HeroAircraft extends AbstractAircraft {
         int speedX = 0;
         int speedY = this.getSpeedY() + direction*5;
         BaseBullet bullet;
+        int currentPower = power + (System.currentTimeMillis() < powerBuffEndTime ? extraPower : 0);
         for(int i=0; i<shootNum; i++){
             // 子弹发射位置相对飞机位置向前偏移
             // 多个子弹横向分散
-            bullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, power);
+            bullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, currentPower);
             res.add(bullet);
         }
         return res;
+    }
+
+    // 供道具使用：回血
+    public void addHp(int heal){
+        this.hp = Math.min(this.maxHp, this.hp + heal);
+    }
+
+    // 供道具使用：临时增加攻击力
+    public void addTemporaryPower(int extraPower, int durationMs){
+        this.extraPower = extraPower;
+        this.powerBuffEndTime = System.currentTimeMillis() + durationMs;
     }
 
 }
