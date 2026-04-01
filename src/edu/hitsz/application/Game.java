@@ -56,10 +56,7 @@ public class Game extends JPanel {
     private final int maxPropsOnField = 5;
 
     public Game() {
-        heroAircraft = HeroAircraft.getHeroAircraft(
-                Main.WINDOW_WIDTH / 2,
-                Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-                0, 0, 100);
+        heroAircraft = HeroAircraft.getHeroAircraft();
 
         enemyAircrafts = new LinkedList<>();
         heroBullets = new LinkedList<>();
@@ -198,17 +195,28 @@ public class Game extends JPanel {
                         if (rand.nextDouble() < propSpawnRate && props.size() < maxPropsOnField) {
                             int px = enemyAircraft.getLocationX();
                             int py = enemyAircraft.getLocationY();
-                            int pick = rand.nextInt(3);
+                            int pick = rand.nextInt(5);
                             BaseProp newProp = null;
                             switch (pick) {
                                 case 0:
-                                    newProp = new BloodProp(px, py, 0, 5, 30); // 回血30
+                                    newProp = PropManager.createProp("BloodProp",px,py,0,5);
+                                    newProp.apply(heroAircraft);
                                     break;
                                 case 1:
-                                    newProp = new BulletProp(px, py, 0, 5, 20, 8000); // 临时+20威力，持续8s
+                                    newProp = PropManager.createProp("BombProp",px,py,0,5);
+                                    newProp.apply(heroAircraft);
                                     break;
                                 case 2:
-                                    newProp = new BulletPlusProp(px, py, 0, 5, 40, 8000); // 超级活力：临时+40威力，持续8s
+                                    newProp = PropManager.createProp("BulletProp",px,py,0,5);
+                                    newProp.apply(heroAircraft);
+                                    break;
+                                case 3:
+                                    newProp = PropManager.createProp("BulletPlusProp",px,py,0,5);
+                                    newProp.apply(heroAircraft);
+                                    break;
+                                case 4:
+                                    newProp = PropManager.createProp("FreezeProp",px,py,0,5);
+                                    newProp.apply(heroAircraft);
                                     break;
                             }
                             if (newProp != null) {
