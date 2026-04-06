@@ -4,6 +4,7 @@ import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.prop.*;
+import edu.hitsz.enemyfactory.*;
 
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.util.*;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.*;
+import java.util.Random;
 
 /**
  * 游戏主面板，游戏启动
@@ -54,6 +56,14 @@ public class Game extends JPanel {
     private final java.util.Random rand = new java.util.Random();
     private final double propSpawnRate = 0.25; // 25% 概率产生道具
     private final int maxPropsOnField = 5;
+    //敌机生成相关
+    Random random = new Random();
+    String[] EnemyList = {"Mob", "Elite", "ElitePlus","ElitePro"};
+    private final EnemyManager mobFactory = new ModEnemyFactory();
+    private final EnemyManager eliteFactory = new EliteEnemyFactory();
+    private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
+    private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
+    private final EnemyManager bossFactory = new BossEnemyFactory();
 
     public Game() {
         heroAircraft = HeroAircraft.getHeroAircraft();
@@ -79,29 +89,24 @@ public class Game extends JPanel {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-
+                //按周期随机产生敌机
                 enemySpawnCounter++;
                 if (enemySpawnCounter >=enemySpawnCycle) {
                     enemySpawnCounter = 0;
-                    // 产生普通敌机
-                    if (enemyAircrafts.size() < enemyMaxNumber) {
-                        enemyAircrafts.add(new MobEnemy(
-                                (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
-                                (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
-                                0,
-                                10,
-                                30
-                        ));
-                    }
-                    //产生精英敌机
-                    if (enemyAircrafts.size() < enemyMaxNumber) {
-                        enemyAircrafts.add(new EliteEnemy(
-                                (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.Elite_ENEMY_IMAGE.getWidth())),
-                                (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
-                                0,
-                                10,
-                                30
-                        ));
+                    int randomNum = random.nextInt(EnemyList.length);
+                    switch(EnemyList[randomNum]){
+                        case "Mob":
+                            enemyAircrafts.add(mobFactory.createEnemy());
+                            break;
+                        case "Elite":
+                            enemyAircrafts.add(eliteFactory.createEnemy());
+                            break;
+                        case "ElitePlus":
+                            enemyAircrafts.add(elitePlusFactory.createEnemy());
+                            break;
+                        case "ElitePro":
+                            enemyAircrafts.add(eliteProFactory.createEnemy());
+                            break;
                     }
                 }
 
