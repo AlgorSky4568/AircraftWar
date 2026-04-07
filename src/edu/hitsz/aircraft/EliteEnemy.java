@@ -3,12 +3,13 @@ package edu.hitsz.aircraft;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
+import edu.hitsz.prop.BaseProp;
 
 import java.util.LinkedList;
 import java.util.List;
 
 //精英敌人
-public class EliteEnemy extends AbstractAircraft{
+public class EliteEnemy extends EnemyAircraft{
 
     //每次射击发射子弹数量
     private int shootNum = 1;
@@ -47,5 +48,10 @@ public class EliteEnemy extends AbstractAircraft{
             res.add(bullet);
         }
         return res;
+    }
+
+    @Override
+    public int addScore(){
+        return 20;
     }
 }

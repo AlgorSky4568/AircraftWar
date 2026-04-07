@@ -30,7 +30,7 @@ public class Game extends JPanel {
     private final int timeInterval = 40;
 
     private final HeroAircraft heroAircraft;
-    private final List<AbstractAircraft> enemyAircrafts;
+    private final List<EnemyAircraft> enemyAircrafts;
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<BaseProp> props;
@@ -142,7 +142,7 @@ public class Game extends JPanel {
             //英雄机射击
             heroBullets.addAll(heroAircraft.shoot());
             //  敌机射击
-            for(AbstractAircraft abstractAircraft : enemyAircrafts){
+            for(EnemyAircraft abstractAircraft : enemyAircrafts){
                 enemyBullets.addAll(abstractAircraft.shoot());
             }
         }
@@ -158,7 +158,7 @@ public class Game extends JPanel {
     }
 
     private void aircraftsMoveAction() {
-        for (AbstractAircraft enemyAircraft : enemyAircrafts) {
+        for (EnemyAircraft enemyAircraft : enemyAircrafts) {
             enemyAircraft.forward();
         }
         // 道具下落
@@ -182,7 +182,7 @@ public class Game extends JPanel {
             if (bullet.notValid()) {
                 continue;
             }
-            for (AbstractAircraft enemyAircraft : enemyAircrafts) {
+            for (EnemyAircraft enemyAircraft : enemyAircrafts) {
                 if (enemyAircraft.notValid()) {
                     // 已被其他子弹击毁的敌机，不再检测
                     // 避免多个子弹重复击毁同一敌机的判定
@@ -195,38 +195,11 @@ public class Game extends JPanel {
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
                         // 获得分数
-                        score += 10;
-                        // 尝试产生道具（按概率且场上数量未过限）
-                        if (rand.nextDouble() < propSpawnRate && props.size() < maxPropsOnField) {
-                            int px = enemyAircraft.getLocationX();
-                            int py = enemyAircraft.getLocationY();
-                            int pick = rand.nextInt(5);
-                            BaseProp newProp = null;
-                            switch (pick) {
-                                case 0:
-                                    newProp = PropManager.createProp("BloodProp",px,py,0,5);
-                                    newProp.apply(heroAircraft);
-                                    break;
-                                case 1:
-                                    newProp = PropManager.createProp("BombProp",px,py,0,5);
-                                    newProp.apply(heroAircraft);
-                                    break;
-                                case 2:
-                                    newProp = PropManager.createProp("BulletProp",px,py,0,5);
-                                    newProp.apply(heroAircraft);
-                                    break;
-                                case 3:
-                                    newProp = PropManager.createProp("BulletPlusProp",px,py,0,5);
-                                    newProp.apply(heroAircraft);
-                                    break;
-                                case 4:
-                                    newProp = PropManager.createProp("FreezeProp",px,py,0,5);
-                                    newProp.apply(heroAircraft);
-                                    break;
-                            }
-                            if (newProp != null) {
-                                props.add(newProp);
-                            }
+                        score += enemyAircraft.addScore();
+                        // 道具由敌机自行决定是否产生
+                        BaseProp newProp = enemyAircraft.createProp();
+                        if (newProp != null && props.size() < maxPropsOnField) {
+                            props.add(newProp);
                         }
 
                     }

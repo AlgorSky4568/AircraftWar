@@ -5,6 +5,7 @@ import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.prop.BaseProp;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -81,6 +82,11 @@ public class HeroAircraft extends AbstractAircraft {
     public void addTemporaryPower(int extraPower, int durationMs){
         this.extraPower = extraPower;
         this.powerBuffEndTime = System.currentTimeMillis() + durationMs;
+    }
+
+    @Override
+    public int addScore() {
+        return 0;
     }
 
 }

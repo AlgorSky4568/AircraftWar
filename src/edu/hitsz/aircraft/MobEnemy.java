@@ -3,6 +3,7 @@ package edu.hitsz.aircraft;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
+import edu.hitsz.prop.BaseProp;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * 不可射击、不掉落道具
  * @author hitsz
  */
-public class MobEnemy extends AbstractAircraft {
+public class MobEnemy extends EnemyAircraft {
 
     //每次射击发射子弹数量
     private int shootNum = 1;
@@ -51,6 +52,11 @@ public class MobEnemy extends AbstractAircraft {
             res.add(bullet);
         }
         return res;
+    }
+
+    @Override
+    public int addScore(){
+        return 10;
     }
 
 }
