@@ -11,15 +11,6 @@ import java.util.List;
 //精英敌人
 public class EliteEnemy extends EnemyAircraft{
 
-    //每次射击发射子弹数量
-    private int shootNum = 1;
-
-    //子弹威力
-    private int power = 1;
-
-    //子弹射击方向 (向上发射：-1，向下发射：1)
-    private int direction = 1;
-
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }

@@ -1,5 +1,6 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.application.Main;
 import edu.hitsz.prop.BaseProp;
 
 /**
@@ -15,4 +16,11 @@ public abstract class EnemyAircraft extends AbstractAircraft {
         // 默认不掉落，道具由子类决定（如 ElitePlusEnemy/EliteProEnemy）
         return null;
     }
+
+    public void forward_x(){
+        if(getLocationX() >= Main.WINDOW_WIDTH || getLocationX() <= 0){
+            speedX = -speedX;
+        }
+    }
+    public abstract  int addScore();
 }

@@ -16,6 +16,15 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     protected int maxHp;
     protected int hp;
 
+    //每次射击发射子弹数量
+    protected int shootNum = 1;
+
+    //子弹威力
+    protected int power = 1;
+
+    //子弹射击方向 (向上发射：-1，向下发射：1)
+    protected int direction = 1;
+
     //构造函数，初始化一个敌机
     public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY);
@@ -45,7 +54,6 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
      */
     public abstract List<BaseBullet> shoot();
 
-    public abstract  int addScore();
 
 
 }

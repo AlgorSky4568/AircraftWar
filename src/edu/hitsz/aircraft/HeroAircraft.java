@@ -6,6 +6,8 @@ import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
 import edu.hitsz.prop.BaseProp;
+import edu.hitsz.shoot.ShootStrategy;
+import edu.hitsz.shoot.StraightShoot;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,9 +31,12 @@ public class HeroAircraft extends AbstractAircraft {
     //子弹射击方向 (向上发射：-1，向下发射：1)
     private int direction = -1;
 
+    private ShootStrategy shootStrategy = new StraightShoot();
+
     private volatile static HeroAircraft heroAircraft;
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
+        this.direction = -1;
     }
 
     public static HeroAircraft getHeroAircraft(){
@@ -57,36 +62,12 @@ public class HeroAircraft extends AbstractAircraft {
      * @return 射击出的子弹List
      */
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedX = 0;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet bullet;
-        int currentPower = power + (System.currentTimeMillis() < powerBuffEndTime ? extraPower : 0);
-        for(int i=0; i<shootNum; i++){
-            // 子弹发射位置相对飞机位置向前偏移
-            // 多个子弹横向分散
-            bullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, currentPower);
-            res.add(bullet);
-        }
-        return res;
+        return shootStrategy.shoot(this, direction, shootNum,power);
     }
 
     // 供道具使用：回血
     public void addHp(int heal){
         this.hp = Math.min(this.maxHp, this.hp + heal);
-    }
-
-    // 供道具使用：临时增加攻击力
-    public void addTemporaryPower(int extraPower, int durationMs){
-        this.extraPower = extraPower;
-        this.powerBuffEndTime = System.currentTimeMillis() + durationMs;
-    }
-
-    @Override
-    public int addScore() {
-        return 0;
     }
 
 }

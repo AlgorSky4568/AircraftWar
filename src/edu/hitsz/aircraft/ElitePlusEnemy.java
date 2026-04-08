@@ -13,30 +13,20 @@ import java.util.Random;
 
 //精英敌人
 public class ElitePlusEnemy extends EnemyAircraft{
-    //每次射击发射子弹数量
-    private int shootNum = 2;
-
-    //子弹威力
-    private int power = 1;
-
-    //子弹射击方向 (向上发射：-1，向下发射：1)
-    private int direction = 1;
 
     String[] propList = {"BloodProp", "BombProp", "BulletProp", "BulletPlusProp"};
 
     public ElitePlusEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
+        this.shootNum = 2;
     }
 
     @Override
     public void forward() {
         super.forward();
+        super.forward_x();
         // 判定 y 轴向下飞行出界
         if (locationY >= Main.WINDOW_HEIGHT ) {
-            vanish();
-        }
-        // 判定x轴左右飞行出界
-        if (locationX >= Main.WINDOW_WIDTH || locationX < 0 ) {
             vanish();
         }
     }
@@ -69,4 +59,5 @@ public class ElitePlusEnemy extends EnemyAircraft{
         int randomNum = random.nextInt(propList.length);
         return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY(),0,0);
     }
+
 }
