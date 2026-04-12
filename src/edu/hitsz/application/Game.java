@@ -252,7 +252,7 @@ public class Game extends JPanel {
         for (BaseProp prop : props) {
             if (prop.notValid()) continue;
             if (heroAircraft.crash(prop)) {
-                prop.apply(heroAircraft);
+                prop.apply(heroAircraft,prop);
                 prop.vanish();
                 // 可加音效或提示
             }

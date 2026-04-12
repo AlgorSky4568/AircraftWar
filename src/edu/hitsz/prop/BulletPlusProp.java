@@ -14,7 +14,7 @@ public class BulletPlusProp extends BaseProp{
     }
 
     @Override
-    public void apply(HeroAircraft hero) {
+    public void apply(HeroAircraft hero, BaseProp prop) {
         System.out.println("FireSupply active!");
     }
 }

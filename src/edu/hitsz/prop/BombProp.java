@@ -8,7 +8,7 @@ public class BombProp extends BaseProp{
         super(locationX, locationY, speedX, speedY);
     }
 
-    public void apply(HeroAircraft hero) {
+    public void apply(HeroAircraft hero, BaseProp prop) {
         System.out.println("Bomb!");
     }
 }

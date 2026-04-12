@@ -8,6 +8,8 @@ import edu.hitsz.bullet.HeroBullet;
 import edu.hitsz.prop.BaseProp;
 import edu.hitsz.prop.BulletPlusProp;
 import edu.hitsz.prop.BulletProp;
+import edu.hitsz.shoot.CircleShoot;
+import edu.hitsz.shoot.ScatterShoot;
 import edu.hitsz.shoot.ShootStrategy;
 import edu.hitsz.shoot.StraightShoot;
 
@@ -21,8 +23,8 @@ import java.util.List;
 public class HeroAircraft extends AbstractAircraft {
 
     private ShootStrategy shootStrategy1 = new StraightShoot();
-    private ShootStrategy shootStrategy2 = new StraightShoot();
-    private ShootStrategy shootStrategy3 = new StraightShoot();
+    private ShootStrategy shootStrategy2 = new ScatterShoot();
+    private ShootStrategy shootStrategy3 = new CircleShoot();
 
     //控制弹道，默认是0，散射是1，环射是2
     private int trajectoryFlag = 0;

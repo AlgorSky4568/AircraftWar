@@ -20,5 +20,5 @@ public abstract class BaseProp extends AbstractFlyingObject {
     }
 
     // 道具效果应用到英雄机
-    public abstract void apply(HeroAircraft hero);
+    public abstract void apply(HeroAircraft hero, BaseProp prop);
 }

@@ -12,7 +12,7 @@ public class BloodProp extends BaseProp{
     }
 
     @Override
-    public void apply(HeroAircraft hero) {
+    public void apply(HeroAircraft hero, BaseProp prop) {
         hero.addHp(heal);
     }
 }

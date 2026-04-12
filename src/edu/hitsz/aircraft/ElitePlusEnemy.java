@@ -48,7 +48,7 @@ public class ElitePlusEnemy extends EnemyAircraft{
     public BaseProp createProp(){
         Random random = new Random();
         int randomNum = random.nextInt(propList.length);
-        return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY(),0,0);
+        return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY(),0,2);
     }
 
 }
