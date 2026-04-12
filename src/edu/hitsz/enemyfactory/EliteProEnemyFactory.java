@@ -17,6 +17,6 @@ public class EliteProEnemyFactory implements EnemyManager{
                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                 randomList[randomNum],
                 10,
-                70);
+                40);
     }
 }

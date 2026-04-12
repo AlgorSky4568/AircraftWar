@@ -18,7 +18,7 @@ public abstract class EnemyAircraft extends AbstractAircraft {
     }
 
     public void forward_x(){
-        if(getLocationX() >= Main.WINDOW_WIDTH || getLocationX() <= 0){
+        if(getLocationX() >= Main.WINDOW_WIDTH - 5 || getLocationX() <= 5){
             speedX = -speedX;
         }
     }

@@ -16,6 +16,6 @@ public class ElitePlusEnemyFactory implements EnemyManager{
                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                 randomList[randomNum],
                 10,
-                60);
+                30);
     }
 }

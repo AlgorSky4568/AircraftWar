@@ -12,6 +12,6 @@ public class ModEnemyFactory implements EnemyManager{
                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                 0,
                 10,
-                30);
+                10);
     }
 }
