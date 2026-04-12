@@ -5,13 +5,18 @@ import edu.hitsz.application.EnemyManager;
 import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 
+import java.util.Random;
+
 public class BossEnemyFactory implements EnemyManager{
+    Random random = new Random();
+    int[] randomList = {-3,3};
     @Override
     public EnemyAircraft createEnemy(){
-        return new BossEnemy((int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
-                (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
+        int randomNum = random.nextInt(randomList.length);
+        return new BossEnemy((int) (0.5 * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
                 0,
-                10,
+                randomList[randomNum],
+                0,
                 100);
     }
 }

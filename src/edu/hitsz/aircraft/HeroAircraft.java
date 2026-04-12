@@ -18,19 +18,6 @@ import java.util.List;
  */
 public class HeroAircraft extends AbstractAircraft {
 
-    //每次射击发射子弹数量
-    private int shootNum = 1;
-
-    //子弹威力
-    private int power = 30;
-
-    //临时buff的额外威力，持续一段时间
-    private int extraPower = 0;
-    private long powerBuffEndTime = 0;
-
-    //子弹射击方向 (向上发射：-1，向下发射：1)
-    private int direction = -1;
-
     private ShootStrategy shootStrategy = new StraightShoot();
 
     private volatile static HeroAircraft heroAircraft;

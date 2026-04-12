@@ -110,6 +110,9 @@ public class Game extends JPanel {
                     }
                 }
 
+                if(score == 300){
+                    enemyAircrafts.add(bossFactory.createEnemy());
+                }
                 // 飞机发射子弹
                 shootAction();
                 // 子弹移动
@@ -197,10 +200,19 @@ public class Game extends JPanel {
                         // 获得分数
                         score += enemyAircraft.addScore();
                         // 道具由敌机自行决定是否产生
-                        BaseProp newProp = enemyAircraft.createProp();
-                        if (newProp != null && props.size() < maxPropsOnField) {
-                            props.add(newProp);
+                        if(enemyAircraft instanceof BossEnemy){
+                            for(int i = 0; i < 3; i++){
+                                BaseProp newProp = enemyAircraft.createProp();
+                                props.add(newProp);
+                            }
                         }
+                        else{
+                            BaseProp newProp = enemyAircraft.createProp();
+                            if (newProp != null && props.size() < maxPropsOnField) {
+                                props.add(newProp);
+                            }
+                        }
+
 
                     }
                 }

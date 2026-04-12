@@ -5,6 +5,8 @@ import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.BaseProp;
 import edu.hitsz.application.PropManager;
+import edu.hitsz.shoot.ScatterShoot;
+import edu.hitsz.shoot.ShootStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.Random;
 public class EliteProEnemy extends EnemyAircraft{
 
     String[] propList = {"BloodProp", "BombProp", "BulletProp", "BulletPlusProp", "FreezeProp"};
+
+    private ShootStrategy shootStrategy = new ScatterShoot();
 
     public EliteProEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
@@ -32,16 +36,7 @@ public class EliteProEnemy extends EnemyAircraft{
 
     @Override
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet bullet;
-        bullet = new EnemyBullet(x + (0*2 - 3 + 1)*10, y, -1, speedY, power);
-        bullet = new EnemyBullet(x + (1*2 - 3 + 1)*10, y, 0, speedY, power);
-        bullet = new EnemyBullet(x + (2*2 - 3 + 1)*10, y, 1, speedY, power);
-        res.add(bullet);
-        return res;
+        return shootStrategy.shoot(this,direction,shootNum,power);
     }
 
     @Override
