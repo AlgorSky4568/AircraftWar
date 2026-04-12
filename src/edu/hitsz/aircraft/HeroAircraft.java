@@ -6,6 +6,8 @@ import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
 import edu.hitsz.prop.BaseProp;
+import edu.hitsz.prop.BulletPlusProp;
+import edu.hitsz.prop.BulletProp;
 import edu.hitsz.shoot.ShootStrategy;
 import edu.hitsz.shoot.StraightShoot;
 
@@ -18,7 +20,12 @@ import java.util.List;
  */
 public class HeroAircraft extends AbstractAircraft {
 
-    private ShootStrategy shootStrategy = new StraightShoot();
+    private ShootStrategy shootStrategy1 = new StraightShoot();
+    private ShootStrategy shootStrategy2 = new StraightShoot();
+    private ShootStrategy shootStrategy3 = new StraightShoot();
+
+    //控制弹道，默认是0，散射是1，环射是2
+    private int trajectoryFlag = 0;
 
     private volatile static HeroAircraft heroAircraft;
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
@@ -26,6 +33,7 @@ public class HeroAircraft extends AbstractAircraft {
         this.direction = -1;
         this.power = 50;
     }
+
 
     public static HeroAircraft getHeroAircraft(){
         if(heroAircraft == null){
@@ -44,13 +52,34 @@ public class HeroAircraft extends AbstractAircraft {
         // 英雄机由鼠标控制，不通过forward函数移动
     }
 
+    public void changeTrajectory(BaseProp prop){
+        if(prop instanceof BulletProp){
+            trajectoryFlag = 1;
+        }
+        else if(prop instanceof BulletPlusProp){
+            trajectoryFlag = 2;
+        }
+    }
+
+    public void recoverTrajectory(){
+        trajectoryFlag = 0;
+    }
+
     @Override
     /**
      * 通过射击产生子弹
      * @return 射击出的子弹List
      */
     public List<BaseBullet> shoot() {
-        return shootStrategy.shoot(this, direction, shootNum,power);
+        if(trajectoryFlag == 1){
+            return shootStrategy2.shoot(this, direction, 3,power);
+        }
+        else if(trajectoryFlag == 2){
+            return shootStrategy3.shoot(this, direction, 20,power);
+        }
+        else{
+            return shootStrategy1.shoot(this, direction, shootNum,power);
+        }
     }
 
     // 供道具使用：回血
