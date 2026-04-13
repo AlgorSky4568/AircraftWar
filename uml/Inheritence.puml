@@ -67,7 +67,7 @@ class HeroAircraft {
     + addHp(int):void
 }
 AbstractAircraft <|-- HeroAircraft
-HeroAircraft ..> ShootStrategy
+HeroAircraft o--> ShootStrategy
 
 ' Enemy types
 class MobEnemy {
@@ -193,7 +193,7 @@ Game --> PropManager
 Game --> HeroController
 Game --> ImageManager
 HeroController --> HeroAircraft
-PropManager ..> BaseProp : creates
+PropManager ..> BaseProp
 ImageManager ..> HeroAircraft
 
 @enduml
