@@ -45,6 +45,6 @@ public class BossEnemy extends EnemyAircraft{
     public BaseProp createProp(){
         Random random = new Random();
         int randomNum = random.nextInt(propList.length);
-        return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY() + 10,0,2);
+        return PropManager.createProp(propList[randomNum],random.nextInt(Main.WINDOW_WIDTH),getLocationY(),0,2);
     }
 }

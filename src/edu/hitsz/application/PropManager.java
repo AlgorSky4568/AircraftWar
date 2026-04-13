@@ -12,10 +12,10 @@ public class PropManager {
                 return new BombProp(locationX,locationY,speedX,speedY);
 
             case "BulletProp":
-                return new BulletProp(locationX,locationY,speedX,speedY,1,1);
+                return new BulletProp(locationX,locationY,speedX,speedY);
 
             case "BulletPlusProp":
-                return new BulletPlusProp(locationX,locationY,speedX,speedY,1,1);
+                return new BulletPlusProp(locationX,locationY,speedX,speedY);
 
             case "FreezeProp":
                 return new FreezeProp(locationX,locationY,speedX,speedY);

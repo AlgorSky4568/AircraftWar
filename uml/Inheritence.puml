@@ -1,8 +1,8 @@
 @startuml
-'https://plantuml.com/class-diagram
+' https://plantuml.com/class-diagram
 
-abstract class AbstractFlyingObject
-{
+' Core domain
+abstract class AbstractFlyingObject {
     # locationX:int
     # locationY:int
     # speedX:int
@@ -14,8 +14,8 @@ abstract class AbstractFlyingObject
 
     + AbstractFlyingObject(int locationX, int locationY, int speedX, int speedY)
     + forward():void
-    + crash(AbstractFlyingObject flyingObject):boolean
-    + setLocation(double locationX, double locationY):void
+    + crash(AbstractFlyingObject):boolean
+    + setLocation(double,double):void
     + getLocationX():int
     + getLocationY():int
     + getSpeedY():int
@@ -25,116 +25,175 @@ abstract class AbstractFlyingObject
     + notValid():boolean
     + vanish():void
 }
-abstract class AbstractAircraft
-{
-	# maxHp:int
+
+abstract class AbstractAircraft {
+    # maxHp:int
     # hp:int
-    + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
-    + decreaseHp(int decrease):void
+    # shootNum:int
+    # power:int
+    # direction:int
+
+    + AbstractAircraft(int locationX,int locationY,int speedX,int speedY,int hp)
+    + decreaseHp(int):void
     + getHp():int
     + {abstract} shoot():List<BaseBullet>
- }
+}
 
+class EnemyAircraft {
+    + EnemyAircraft(int locationX,int locationY,int speedX,int speedY,int hp)
+    + createProp():BaseProp
+    + forward_x():void
+    + {abstract} addScore():int
+}
 
+AbstractFlyingObject <|-- AbstractAircraft
+AbstractAircraft <|-- EnemyAircraft
+
+' Hero
 class HeroAircraft {
     - shootNum:int
     - power:int
     - direction:int
-    + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    - trajectoryFlag:int
+    - shootStrategy1:ShootStrategy
+    - shootStrategy2:ShootStrategy
+    - shootStrategy3:ShootStrategy
+
+    + getHeroAircraft():HeroAircraft
     + forward():void
     + shoot():List<BaseBullet>
+    + changeTrajectory(BaseProp):void
+    + recoverTrajectory():void
+    + addHp(int):void
 }
-
 AbstractAircraft <|-- HeroAircraft
+HeroAircraft ..> ShootStrategy
 
+' Enemy types
 class MobEnemy {
-    + MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + MobEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
 }
-AbstractAircraft <|-- MobEnemy
-
 class EliteEnemy {
-    + EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + EliteEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
 }
-AbstractAircraft <|-- EliteEnemy
-
 class ElitePlusEnemy {
-    + ElitePlusEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + ElitePlusEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
 }
-AbstractAircraft <|-- ElitePlusEnemy
-
 class EliteProEnemy {
-    + EliteProEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + EliteProEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
 }
-AbstractAircraft <|-- EliteProEnemy
-
 class BossEnemy {
-    + BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp)
+    + BossEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
 }
-AbstractAircraft <|-- BossEnemy
 
-abstract class BaseBullet
-{
+EnemyAircraft <|-- MobEnemy
+EnemyAircraft <|-- EliteEnemy
+EnemyAircraft <|-- ElitePlusEnemy
+EnemyAircraft <|-- EliteProEnemy
+EnemyAircraft <|-- BossEnemy
+
+' Bullets
+abstract class BaseBullet {
     - power:int
-    + BaseBullet(int locationX, int locationY, int speedX, int speedY, int power)
+    + BaseBullet(int,int,int,int,int)
     + forward():void
-	+ getPower():int
+    + getPower():int
 }
-
-class HeroBullet {
-    + HeroBullet(int locationX, int locationY,
-     int speedX, int speedY, int power)
-}
-
-class EnemyBullet {
-    + EnemyBullet(int locationX, int locationY,
-     int speedX, int speedY, int power)
-}
-
+class HeroBullet
+class EnemyBullet
 BaseBullet <|-- HeroBullet
 BaseBullet <|-- EnemyBullet
-
-AbstractFlyingObject <|-- AbstractAircraft
 AbstractFlyingObject <|-- BaseBullet
 
-abstract class BaseProp
-{
-
+' Props
+abstract class BaseProp {
+    + BaseProp(int,int,int,int)
+    + forward():void
+    + apply(HeroAircraft,BaseProp):void
 }
+class BloodProp
+class BombProp
+class BulletProp
+class BulletPlusProp
+class FreezeProp
 
-class BloodProp {
-
-}
 BaseProp <|-- BloodProp
-
-class BombProp {
-
-}
 BaseProp <|-- BombProp
-
-class BulletProp {
-
-}
 BaseProp <|-- BulletProp
-
-class BulletPlusProp {
-
-}
 BaseProp <|-- BulletPlusProp
-
-class FreezeProp {
-
-}
 BaseProp <|-- FreezeProp
-
 AbstractFlyingObject <|-- BaseProp
+
+' Shooting strategy (Strategy pattern)
+interface ShootStrategy {
+    + shoot(AbstractAircraft,int,int,int):List<BaseBullet>
+}
+class StraightShoot
+class ScatterShoot
+class CircleShoot
+ShootStrategy <|.. StraightShoot
+ShootStrategy <|.. ScatterShoot
+ShootStrategy <|.. CircleShoot
+
+' Enemy factory (Factory pattern)
+interface EnemyManager {
+    + createEnemy():EnemyAircraft
+}
+class ModEnemyFactory
+class EliteEnemyFactory
+class ElitePlusEnemyFactory
+class EliteProEnemyFactory
+class BossEnemyFactory
+
+EnemyManager <|.. ModEnemyFactory
+EnemyManager <|.. EliteEnemyFactory
+EnemyManager <|.. ElitePlusEnemyFactory
+EnemyManager <|.. EliteProEnemyFactory
+EnemyManager <|.. BossEnemyFactory
+
+' Application layer
+class PropManager {
+    + createProp(String,int,int,int,int):BaseProp
+}
+class ImageManager {
+    + get(Object):BufferedImage
+    + get(String):BufferedImage
+}
+class Game {
+    - heroAircraft:HeroAircraft
+    - enemyAircrafts:List<EnemyAircraft>
+    - heroBullets:List<BaseBullet>
+    - enemyBullets:List<BaseBullet>
+    - props:List<BaseProp>
+    - mobFactory:EnemyManager
+    - eliteFactory:EnemyManager
+    - elitePlusFactory:EnemyManager
+    - eliteProFactory:EnemyManager
+    - bossFactory:EnemyManager
+    + action():void
+}
+class HeroController
+
+Game --> HeroAircraft
+Game --> EnemyAircraft
+Game --> BaseBullet
+Game --> BaseProp
+Game --> EnemyManager
+Game --> PropManager
+Game --> HeroController
+Game --> ImageManager
+HeroController --> HeroAircraft
+PropManager ..> BaseProp : creates
+ImageManager ..> HeroAircraft
+
 @enduml
