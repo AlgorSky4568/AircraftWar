@@ -39,13 +39,13 @@ public class Game extends JPanel {
     private final int enemyMaxNumber = 5;
 
     //敌机生成周期
-    protected double enemySpawnCycle  =  20;
+    protected final double enemySpawnCycle  =  20;
     private int enemySpawnCounter = 0;
 
     //英雄机和敌机射击周期
-    protected double hero_shootCycle = 20;
+    protected final double hero_shootCycle = 20;
     private int hero_shootCounter = 0;
-    protected double enemy_shootCycle = 20;
+    protected final double enemy_shootCycle = 20;
     private int enemy_shootCounter = 0;
     private int boss_count = 1;
 
@@ -61,7 +61,7 @@ public class Game extends JPanel {
     private final int maxPropsOnField = 5;
     //敌机生成相关
     Random random = new Random();
-    String[] EnemyList = {"Mob", "Elite", "ElitePlus","ElitePro"};
+    final String[] EnemyList = {"Mob", "Elite", "ElitePlus","ElitePro"};
     private final EnemyManager mobFactory = new ModEnemyFactory();
     private final EnemyManager eliteFactory = new EliteEnemyFactory();
     private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
@@ -284,7 +284,7 @@ public class Game extends JPanel {
             gameOverFlag = true;
             System.out.println("Game Over!");
         }
-    };
+    }
 
     //***********************
     //      Paint 各部分
