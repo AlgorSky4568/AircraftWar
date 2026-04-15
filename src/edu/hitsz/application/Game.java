@@ -68,6 +68,11 @@ public class Game extends JPanel {
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
 
+
+    public int getScore(){
+        return score;
+    }
+
     public Game() {
         heroAircraft = HeroAircraft.getHeroAircraft();
 
