@@ -3,6 +3,7 @@ package edu.hitsz.aircraft;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.prop.BaseProp;
+import edu.hitsz.shoot.ShootStrategy;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
 
     //子弹射击方向 (向上发射：-1，向下发射：1)
     protected int direction = 1;
+
 
     //构造函数，初始化一个敌机
     public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
@@ -52,10 +54,9 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
      *  可射击对象需实现，返回子弹列表
      *  非可射击对象空实现，返回空列表
      */
+
     public abstract List<BaseBullet> shoot();
-
-
-
+    
 }
 
 

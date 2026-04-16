@@ -3,10 +3,11 @@ package edu.hitsz.DAO;
 import edu.hitsz.application.Game;
 import edu.hitsz.application.Main;
 
+import java.time.LocalDateTime;
+
 public class Record {
     private int score;
     private String name;
-    private String time;
 
 
     public int getScore(){
@@ -26,11 +27,15 @@ public class Record {
     }
 
     public String getTime() {
-        return time;
-    }
+        LocalDateTime now = LocalDateTime.now();
 
-    public void setTime(String time) {
-        this.time = time;
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+        String result = String.format("%d-%d %d:%d",month,day,hour,minute);
+
+        return result;
     }
 
 
