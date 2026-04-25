@@ -297,7 +297,7 @@ public class Game extends JPanel {
             timer.cancel(); // 取消定时器并终止所有调度任务
             gameOverFlag = true;
             System.out.println("Game Over!");
-
+            recordDaoImpl.printRecords();
         }
     }
 

@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RecordDaoImpl implements DAO{
@@ -35,7 +37,9 @@ public class RecordDaoImpl implements DAO{
         return records;
     }
 
+    @Override
     public void fileWrite() { //写入Records.txt文件中，采用覆写才对，因为可能会有删除操作，而追加无法改变被删除的数据，
+        sortRecords();
         //先清空文件，再写入
         try {
             FileWriter writer1 = new FileWriter(filePath);
@@ -58,10 +62,25 @@ public class RecordDaoImpl implements DAO{
     }
 
     @Override
+    public void sortRecords() {
+        Collections.sort(records, (r1, r2) -> Integer.compare(r2.getScore(), r1.getScore()));
+        records.sort(Comparator.comparingInt(p -> p.getScore()));  // 更简洁
+    }
+
+    @Override
+    public void printRecords() {
+        for(Record record : records){
+            System.out.println(record.getScore() + " " + record.getName() + " " + record.getTime());
+        }
+    }
+
+    @Override
     public void doAdd(Record record) {
         records.add(record);
         fileWrite();
     }
+
+
 
     //删除，待实现，但现在的问题是如何删除，根据什么删除
 

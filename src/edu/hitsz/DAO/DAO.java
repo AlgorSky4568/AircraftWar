@@ -7,4 +7,10 @@ public interface DAO {
 
     List<Record> getAllRecord();
 
+    void fileWrite();
+
+    void sortRecords();
+
+    void printRecords();
+
 }
