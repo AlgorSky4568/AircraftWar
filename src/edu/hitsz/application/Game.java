@@ -1,5 +1,8 @@
 package edu.hitsz.application;
 
+import edu.hitsz.DAO.DAO;
+import edu.hitsz.DAO.Record;
+import edu.hitsz.DAO.RecordDaoImpl;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
@@ -52,6 +55,9 @@ public class Game extends JPanel {
     //当前玩家分数
     private int score = 0;
 
+    //玩家名称
+    private String userName = "TestName";
+
     //游戏结束标志
     private boolean gameOverFlag = false;
 
@@ -67,6 +73,8 @@ public class Game extends JPanel {
     private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
+
+    private final DAO recordDaoImpl = new RecordDaoImpl();
 
 
     public int getScore(){
@@ -285,9 +293,11 @@ public class Game extends JPanel {
     private void checkResultAction(){
         // 游戏结束检查英雄机是否存活
         if (heroAircraft.getHp() <= 0) {
+            recordDaoImpl.doAdd(new Record(score,userName)); //添加新的记录
             timer.cancel(); // 取消定时器并终止所有调度任务
             gameOverFlag = true;
             System.out.println("Game Over!");
+
         }
     }
 
