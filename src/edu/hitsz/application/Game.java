@@ -6,6 +6,8 @@ import edu.hitsz.DAO.RecordDaoImpl;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.music.MusicThread;
+import edu.hitsz.music.SoundThread;
 import edu.hitsz.prop.*;
 import edu.hitsz.enemyfactory.*;
 
@@ -37,6 +39,9 @@ public class Game extends JPanel {
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<BaseProp> props;
+    private final String[] music = {"src/bgm.wav","src/bgm_boss.wav"};
+    private final String[] sound = {"src/bomb_explosion.wav","src/bullet_hit.wav","src/game_over.wav","src/get_supply.wav"};
+
 
     //屏幕中出现的敌机最大数量
     private final int enemyMaxNumber = 5;
@@ -140,6 +145,8 @@ public class Game extends JPanel {
                 crashCheckAction();
                 // 后处理
                 postProcessAction();
+                //播放音乐
+                playMusic();
                 // 重绘界面
                 repaint();
                 // 游戏结束检查
@@ -271,6 +278,10 @@ public class Game extends JPanel {
             }
         }
 
+    }
+    private void playMusic(){
+        MusicThread musicThread = new MusicThread(music[0]);
+        SoundThread soundThread = new SoundThread(sound[0]);
     }
 
     /**
