@@ -39,8 +39,8 @@ public class Game extends JPanel {
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<BaseProp> props;
-    private final String[] music = {"src/bgm.wav","src/bgm_boss.wav"};
-    private final String[] sound = {"src/bomb_explosion.wav","src/bullet_hit.wav","src/game_over.wav","src/get_supply.wav"};
+    private final String[] music = {"src/videos/bgm.wav","src/videos/bgm_boss.wav"};
+    private final String[] sound = {"src/videos/bomb_explosion.wav","src/videos/bullet_hit.wav","src/videos/game_over.wav","src/videos/get_supply.wav"};
 
 
     //屏幕中出现的敌机最大数量
@@ -78,6 +78,7 @@ public class Game extends JPanel {
     private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
+    private MusicThread musicThread = new MusicThread(music[0]);
 
     private final DAO recordDaoImpl = new RecordDaoImpl();
 
@@ -105,6 +106,9 @@ public class Game extends JPanel {
      * 游戏启动入口，执行游戏逻辑
      */
     public void action() {
+
+        // 启动背景音乐线程
+        musicThread.start();
 
         // 定时任务：绘制、对象产生、碰撞判定、及结束判定
         TimerTask task = new TimerTask() {
@@ -134,6 +138,10 @@ public class Game extends JPanel {
                 if(score  >= boss_count * 300){
                     enemyAircrafts.add(bossFactory.createEnemy());
                     boss_count ++;
+                    // 切换Boss音乐：停止旧线程，创建并启动新线程
+                    musicThread.changeStopFlag();
+                    musicThread = new MusicThread(music[1]);
+                    musicThread.start();
                 }
                 // 飞机发射子弹
                 shootAction();
@@ -145,8 +153,6 @@ public class Game extends JPanel {
                 crashCheckAction();
                 // 后处理
                 postProcessAction();
-                //播放音乐
-                playMusic();
                 // 重绘界面
                 repaint();
                 // 游戏结束检查
@@ -221,6 +227,7 @@ public class Game extends JPanel {
                 if (enemyAircraft.crash(bullet)) {
                     // 敌机撞击到英雄机子弹
                     // 敌机损失一定生命值
+                    new SoundThread(sound[1]).start();
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
@@ -232,6 +239,10 @@ public class Game extends JPanel {
                                 BaseProp newProp = enemyAircraft.createProp();
                                 props.add(newProp);
                             }
+                            // Boss被击败，切回普通背景音乐
+                            musicThread.changeStopFlag();
+                            musicThread = new MusicThread(music[0]);
+                            musicThread.start();
                         }
                         else{
                             BaseProp newProp = enemyAircraft.createProp();
@@ -274,16 +285,16 @@ public class Game extends JPanel {
             if (heroAircraft.crash(prop)) {
                 prop.apply(heroAircraft,prop);
                 prop.vanish();
-                // 可加音效或提示
+                if(prop instanceof BombProp){
+                    new SoundThread(sound[0]).start();
+                }
+                else{
+                    new SoundThread(sound[3]).start();
+                }
             }
         }
 
     }
-    private void playMusic(){
-        MusicThread musicThread = new MusicThread(music[0]);
-        SoundThread soundThread = new SoundThread(sound[0]);
-    }
-
     /**
      * 后处理：
      * 1. 删除无效的子弹
@@ -309,6 +320,7 @@ public class Game extends JPanel {
             gameOverFlag = true;
             System.out.println("Game Over!");
             recordDaoImpl.printRecords();
+            new SoundThread(sound[2]).start();
         }
     }
 

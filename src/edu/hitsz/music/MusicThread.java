@@ -33,14 +33,11 @@ public class MusicThread extends Thread { //用来管理背景音乐，音效由
 
     public void resetMusic(String filename){
         this.filename = filename;
+        reverseMusic(); // 重新加载音频数据
     }
 
     public void changeStopFlag(){
         stopFlag = true;
-    }
-
-    public void resetStopFlag(){
-        stopFlag = false;
     }
 
     public void reverseMusic() {
@@ -91,7 +88,7 @@ public class MusicThread extends Thread { //用来管理背景音乐，音效由
         dataLine.start();
         try {
             int numBytesRead = 0;
-            while (numBytesRead != -1) {
+            while (numBytesRead != -1 && !stopFlag) {
     //从音频流读取指定的最大数量的数据字节，并将其放入缓冲区中
                 numBytesRead =
                         source.read(buffer, 0, buffer.length);

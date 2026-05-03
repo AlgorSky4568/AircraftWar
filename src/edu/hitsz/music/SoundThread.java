@@ -31,6 +31,7 @@ public class SoundThread extends Thread { //用来管理背景音乐，音效由
 
     public void resetSound(String filename){
         this.filename = filename;
+        reverseMusic(); // 重新加载音频数据
     }
 
     public void reverseMusic() {
