@@ -29,6 +29,9 @@ public class HeroAircraft extends AbstractAircraft {
     //控制弹道，默认是0，散射是1，环射是2
     private int trajectoryFlag = 0;
 
+    // 火力增强计时器线程
+    private Thread powerUpThread = null;
+
     private volatile static HeroAircraft heroAircraft;
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
@@ -55,16 +58,27 @@ public class HeroAircraft extends AbstractAircraft {
     }
 
     public void changeTrajectory(BaseProp prop){
+        // 中断之前的计时器（如果有）
+        if (powerUpThread != null && powerUpThread.isAlive()) {
+            powerUpThread.interrupt();
+        }
+
         if(prop instanceof BulletProp){
             trajectoryFlag = 1;
         }
         else if(prop instanceof BulletPlusProp){
             trajectoryFlag = 2;
         }
+
+        // 启动新的10秒计时器
+        PowerUpTimer timer = new PowerUpTimer(this);
+        powerUpThread = new Thread(timer);
+        powerUpThread.start();
     }
 
     public void recoverTrajectory(){
         trajectoryFlag = 0;
+        powerUpThread = null;
     }
 
     @Override
