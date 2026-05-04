@@ -57,6 +57,9 @@ public class Game extends JPanel {
     private int enemy_shootCounter = 0;
     private int boss_count = 1;
 
+    //不同难度标志，0为简单，1为普通，2为困难
+    private int difficulty_flag = 0;
+
     //当前玩家分数
     private int score = 0;
 
@@ -100,6 +103,10 @@ public class Game extends JPanel {
 
         this.timer = new Timer("game-action-timer", true);
 
+    }
+
+    public void setDifficulty(int difficulty_flag){
+        this.difficulty_flag = difficulty_flag;
     }
 
     /**
@@ -336,8 +343,18 @@ public class Game extends JPanel {
         super.paint(g);
 
         // 绘制背景,图片滚动
-        g.drawImage(ImageManager.BACKGROUND_IMAGE, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-        g.drawImage(ImageManager.BACKGROUND_IMAGE, 0, this.backGroundTop, null);
+        if(difficulty_flag == 0) {
+            g.drawImage(ImageManager.BACKGROUND_IMAGE1, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
+            g.drawImage(ImageManager.BACKGROUND_IMAGE1, 0, this.backGroundTop, null);
+        }
+        else if(difficulty_flag == 1){
+            g.drawImage(ImageManager.BACKGROUND_IMAGE2, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
+            g.drawImage(ImageManager.BACKGROUND_IMAGE2, 0, this.backGroundTop, null);
+        }
+        else if(difficulty_flag == 2){
+            g.drawImage(ImageManager.BACKGROUND_IMAGE3, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
+            g.drawImage(ImageManager.BACKGROUND_IMAGE3, 0, this.backGroundTop, null);
+        }
         this.backGroundTop += 1;
         if (this.backGroundTop == Main.WINDOW_HEIGHT) {
             this.backGroundTop = 0;
