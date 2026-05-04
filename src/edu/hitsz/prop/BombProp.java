@@ -9,6 +9,5 @@ public class BombProp extends BaseProp{
     }
 
     public void apply(HeroAircraft hero, BaseProp prop) {
-        System.out.println("Bomb!");
     }
 }

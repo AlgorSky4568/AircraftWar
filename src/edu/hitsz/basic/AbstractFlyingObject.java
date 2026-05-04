@@ -32,6 +32,11 @@ public abstract class AbstractFlyingObject {
     //有效（生存）标记，标记为 false的对象会在下次刷新时清除
     protected boolean isValid = true;
 
+    // 冰冻状态：被冰冻时无法移动
+    protected boolean frozen = false;
+    // 冰冻倒计时（游戏帧数），每帧减1，到0解冻
+    protected int freezeCountdown = 0;
+
     public AbstractFlyingObject() {
     }
 
@@ -43,10 +48,27 @@ public abstract class AbstractFlyingObject {
     }
 
     /**
+     * 设置冰冻状态，持续指定帧数
+     * @param durationTicks 冰冻持续的帧数（游戏每帧约40ms）
+     */
+    public void setFrozen(int durationTicks) {
+        this.frozen = true;
+        this.freezeCountdown = durationTicks;
+    }
+
+    /**
      * 可飞行对象根据速度移动
      * 若飞行对象触碰到横向边界，横向速度反向
+     * 若处于冰冻状态，则不移动，倒计时减1
      */
     public void forward() {
+        if (frozen) {
+            freezeCountdown--;
+            if (freezeCountdown <= 0) {
+                frozen = false;
+            }
+            return; // 冰冻期间不移动
+        }
         locationX += speedX;
         locationY += speedY;
         if (locationX <= 0 || locationX >= Main.WINDOW_WIDTH) {

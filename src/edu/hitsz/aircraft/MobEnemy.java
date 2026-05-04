@@ -47,8 +47,7 @@ public class MobEnemy extends EnemyAircraft {
 
     @Override
     public void getFreezeProp() {
-        this.speedX = 0;
-        this.speedY = 0;
+        setFrozen(100); // 冰冻约4秒 (100帧 * 40ms)
     }
 
 

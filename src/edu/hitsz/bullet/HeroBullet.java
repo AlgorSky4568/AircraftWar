@@ -10,4 +10,14 @@ public class HeroBullet extends BaseBullet {
         super(locationX, locationY, speedX, speedY, power);
     }
 
+    @Override
+    public void getBombProp() {
+
+    }
+
+    @Override
+    public void getFreezeProp() {
+
+    }
+
 }

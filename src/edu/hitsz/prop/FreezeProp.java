@@ -8,6 +8,5 @@ public class FreezeProp extends BaseProp{
     }
 
     public void apply(HeroAircraft hero, BaseProp prop) {
-        System.out.println("Freeze!");
     }
 }

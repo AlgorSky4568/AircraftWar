@@ -84,6 +84,8 @@ public class Game extends JPanel {
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
     private MusicThread musicThread = new MusicThread(music[0]);
+    private PropObservation bomPropObservation = new BombPropObservation();
+    private PropObservation freezePropObservation = new FreezePropObservation();
 
     private final DAO recordDaoImpl = new RecordDaoImpl();
 
@@ -301,6 +303,15 @@ public class Game extends JPanel {
                 prop.vanish();
                 if(prop instanceof BombProp){
                     new SoundThread(sound[0]).start();
+                    bomPropObservation.setEnemyAircrafts(enemyAircrafts);
+                    bomPropObservation.setEnemyBullets(enemyBullets);
+                    bomPropObservation.trigger();
+                }
+                else if(prop instanceof FreezeProp){
+                    new SoundThread(sound[3]).start();
+                    freezePropObservation.setEnemyAircrafts(enemyAircrafts);
+                    freezePropObservation.setEnemyBullets(enemyBullets);
+                    freezePropObservation.trigger();
                 }
                 else{
                     new SoundThread(sound[3]).start();

@@ -15,16 +15,6 @@ public class EnemyBullet extends BaseBullet {
     }
 
     public void getFreezeProp() {
-        int tempx = this.speedX;
-        int tempy = this.speedY;
-        this.speedX = 0;
-        this.speedY = 0;
-        try{
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.speedX = tempx;
-        this.speedY = tempy;
+        setFrozen(125); // 冰冻约5秒 (125帧 * 40ms)
     }
 }

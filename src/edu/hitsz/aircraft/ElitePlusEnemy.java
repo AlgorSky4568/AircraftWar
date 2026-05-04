@@ -54,17 +54,7 @@ public class ElitePlusEnemy extends EnemyAircraft{
 
     @Override
     public void getFreezeProp() {
-        int tempx = this.speedX;
-        int tempy = this.speedY;
-        this.speedX = 0;
-        this.speedY = 0;
-        try{
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.speedX = tempx;
-        this.speedY = tempy;
+        setFrozen(75); // 冰冻约3秒 (75帧 * 40ms)
     }
 
     @Override

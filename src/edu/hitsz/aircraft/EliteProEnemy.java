@@ -27,7 +27,22 @@ public class EliteProEnemy extends EnemyAircraft{
 
     @Override
     public void forward() {
-        super.forward();
+        if (frozen) {
+            freezeCountdown--;
+            if (freezeCountdown <= 0) {
+                frozen = false;
+            }
+            locationX += (speedX/3);
+            locationY += (speedY/2);
+            return;
+        }
+        locationX += speedX;
+        locationY += speedY;
+        if (locationX <= 0 || locationX >= Main.WINDOW_WIDTH) {
+            // 横向超出边界后反向
+            speedX = -speedX;
+        }
+
         super.forward_x();
         // 判定 y 轴向下飞行出界
         if (locationY >= Main.WINDOW_HEIGHT ) {
@@ -65,17 +80,7 @@ public class EliteProEnemy extends EnemyAircraft{
 
     @Override
     public void getFreezeProp() {
-        int tempx = this.speedX;
-        int tempy = this.speedY;
-        this.speedX = this.speedX - 5;
-        this.speedY = this.speedY / 3;
-        try{
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.speedX = tempx;
-        this.speedY = tempy;
+        setFrozen(125); // 冰冻约5秒 (125帧 * 40ms)
     }
 
 }
