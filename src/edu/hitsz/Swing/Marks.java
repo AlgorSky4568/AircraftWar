@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 public class Marks {
+    private JPanel mainPanel;
     private JTable table1;
     private JScrollPane scoreTable;
     private JButton deleteRecordButton;
@@ -73,5 +74,9 @@ public class Marks {
         table1.getColumnModel().getColumn(1).setPreferredWidth(100); // 玩家名
         table1.getColumnModel().getColumn(2).setPreferredWidth(80);  // 得分
         table1.getColumnModel().getColumn(3).setPreferredWidth(120); // 记录时间
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
     }
 }

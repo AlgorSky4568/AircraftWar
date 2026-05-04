@@ -3,6 +3,7 @@ package edu.hitsz.application;
 import edu.hitsz.DAO.DAO;
 import edu.hitsz.DAO.Record;
 import edu.hitsz.DAO.RecordDaoImpl;
+import edu.hitsz.Swing.Marks;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
@@ -317,7 +318,7 @@ public class Game extends JPanel {
     }
 
     /**
-     * 检查游戏是否结束，若结束：关闭线程池
+     * 检查游戏是否结束，若结束：关闭线程池，弹出排行榜
      */
     private void checkResultAction(){
         // 游戏结束检查英雄机是否存活
@@ -328,6 +329,17 @@ public class Game extends JPanel {
             System.out.println("Game Over!");
             recordDaoImpl.printRecords();
             new SoundThread(sound[2]).start();
+
+            // 弹出排行榜对话框
+            SwingUtilities.invokeLater(() -> {
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                JDialog rankingDialog = new JDialog(topFrame, "排行榜", true);
+                Marks marks = new Marks(difficulty_flag);
+                rankingDialog.setContentPane(marks.getMainPanel());
+                rankingDialog.pack();
+                rankingDialog.setLocationRelativeTo(topFrame);
+                rankingDialog.setVisible(true);
+            });
         }
     }
 
