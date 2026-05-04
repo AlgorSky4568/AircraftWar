@@ -45,6 +45,26 @@ public class ElitePlusEnemy extends EnemyAircraft{
     }
 
     @Override
+    public void getBombProp() {
+        this.hp = 0;
+    }
+
+    @Override
+    public void getFreezeProp() {
+        int tempx = this.speedX;
+        int tempy = this.speedY;
+        this.speedX = 0;
+        this.speedY = 0;
+        try{
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.speedX = tempx;
+        this.speedY = tempy;
+    }
+
+    @Override
     public BaseProp createProp(){
         Random random = new Random();
         int randomNum = random.nextInt(propList.length);

@@ -42,6 +42,16 @@ public class BossEnemy extends EnemyAircraft{
         return 100;
     }
 
+    @Override
+    public void getBombProp() {
+
+    }
+
+    @Override
+    public void getFreezeProp() {
+
+    }
+
     public BaseProp createProp(){
         Random random = new Random();
         int randomNum = random.nextInt(propList.length);

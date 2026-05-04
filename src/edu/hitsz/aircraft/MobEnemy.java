@@ -40,4 +40,16 @@ public class MobEnemy extends EnemyAircraft {
         return 10;
     }
 
+    @Override
+    public void getBombProp() {
+        this.hp = 0;
+    }
+
+    @Override
+    public void getFreezeProp() {
+        this.speedX = 0;
+        this.speedY = 0;
+    }
+
+
 }

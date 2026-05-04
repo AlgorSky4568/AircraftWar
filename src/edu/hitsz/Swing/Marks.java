@@ -20,7 +20,7 @@ public class Marks {
     private JLabel rankingLAbel;
 
     private final DAO recordDao;
-    private List<Record> records;
+    private final List<Record> records;
 
     /**
      * @param difficulty 难度标识：0-简单，1-普通，2-困难

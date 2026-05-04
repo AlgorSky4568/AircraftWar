@@ -7,6 +7,7 @@ import edu.hitsz.prop.BaseProp;
 import edu.hitsz.shoot.ShootStrategy;
 import edu.hitsz.shoot.StraightShoot;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,5 +37,25 @@ public class EliteEnemy extends EnemyAircraft{
     @Override
     public int addScore(){
         return 20;
+    }
+
+    @Override
+    public void getBombProp() {
+        this.hp = 0;
+    }
+
+    @Override
+    public void getFreezeProp() {
+        int tempx = this.speedX;
+        int tempy = this.speedY;
+        this.speedX = 0;
+        this.speedY = 0;
+        try{
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.speedX = tempx;
+        this.speedY = tempy;
     }
 }

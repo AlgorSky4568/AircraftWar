@@ -51,4 +51,24 @@ public class EliteProEnemy extends EnemyAircraft{
         return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY(),0,2);
     }
 
+    @Override
+    public void getBombProp() {
+        this.hp -= 20;
+    }
+
+    @Override
+    public void getFreezeProp() {
+        int tempx = this.speedX;
+        int tempy = this.speedY;
+        this.speedX = this.speedX - 5;
+        this.speedY = this.speedY / 3;
+        try{
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.speedX = tempx;
+        this.speedY = tempy;
+    }
+
 }

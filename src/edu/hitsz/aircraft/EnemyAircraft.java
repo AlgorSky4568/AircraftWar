@@ -23,4 +23,8 @@ public abstract class EnemyAircraft extends AbstractAircraft {
         }
     }
     public abstract  int addScore();
+
+    public abstract void getBombProp();
+
+    public abstract void getFreezeProp();
 }
