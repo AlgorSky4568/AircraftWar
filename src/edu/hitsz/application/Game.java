@@ -110,6 +110,10 @@ public class Game extends JPanel {
         this.difficulty_flag = difficulty_flag;
     }
 
+    //更新用户姓名
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
     /**
      * 游戏启动入口，执行游戏逻辑
      */
@@ -318,21 +322,27 @@ public class Game extends JPanel {
     }
 
     /**
-     * 检查游戏是否结束，若结束：关闭线程池，弹出排行榜
+     * 检查游戏是否结束，若结束：关闭线程池，弹出姓名输入框，再弹出排行榜
      */
     private void checkResultAction(){
         // 游戏结束检查英雄机是否存活
         if (heroAircraft.getHp() <= 0) {
-            recordDaoImpl.doAdd(new Record(score,userName)); //添加新的记录
             timer.cancel(); // 取消定时器并终止所有调度任务
             gameOverFlag = true;
             System.out.println("Game Over!");
-            recordDaoImpl.printRecords();
             new SoundThread(sound[2]).start();
 
-            // 弹出排行榜对话框
+            // 弹出姓名输入对话框
             SwingUtilities.invokeLater(() -> {
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                String inputName = JOptionPane.showInputDialog(topFrame, "请输入您的姓名：", "游戏结束", JOptionPane.PLAIN_MESSAGE);
+                if (inputName != null && !inputName.trim().isEmpty()) {
+                    userName = inputName.trim();
+                }
+                // 使用输入的姓名添加记录
+                recordDaoImpl.doAdd(new Record(score, userName));
+
+                // 弹出排行榜对话框
                 JDialog rankingDialog = new JDialog(topFrame, "排行榜", true);
                 Marks marks = new Marks(difficulty_flag);
                 rankingDialog.setContentPane(marks.getMainPanel());
