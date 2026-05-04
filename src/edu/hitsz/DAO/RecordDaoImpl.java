@@ -80,8 +80,10 @@ public class RecordDaoImpl implements DAO{
         fileWrite();
     }
 
-
-
-    //删除，待实现，但现在的问题是如何删除，根据什么删除
+    @Override
+    public void doDelete(Record record) {
+        records.remove(record);
+        fileWrite();
+    }
 
 }

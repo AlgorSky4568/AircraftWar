@@ -5,6 +5,8 @@ import java.util.List;
 public interface DAO {
     void doAdd(Record record); //添加新纪录
 
+    void doDelete(Record record); //删除记录
+
     List<Record> getAllRecord();
 
     void fileWrite();

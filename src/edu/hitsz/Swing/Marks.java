@@ -19,10 +19,19 @@ public class Marks {
     private JLabel difficultyLabel;
     private JLabel rankingLAbel;
 
+    private final DAO recordDao;
+    private List<Record> records;
+
     /**
      * @param difficulty 难度标识：0-简单，1-普通，2-困难
      */
     public Marks(int difficulty) {
+        // 从数据访问层获取所有记录
+        recordDao = new RecordDaoImpl();
+        records = recordDao.getAllRecord();
+        // 按得分降序排序
+        records.sort((r1, r2) -> Integer.compare(r2.getScore(), r1.getScore()));
+
         // 程序化创建所有UI组件，不依赖IntelliJ表单初始化
         mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -60,41 +69,8 @@ public class Marks {
         gbc.insets = new Insets(5, 10, 10, 10);
         mainPanel.add(rankingLAbel, gbc);
 
-        // 初始化表格模型，设置四列：名次、玩家名、得分、记录时间
-        String[] columnNames = {"名次", "玩家名", "得分", "记录时间"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // 表格不可编辑
-            }
-        };
-
-        // 从数据访问层获取所有记录
-        DAO recordDao = new RecordDaoImpl();
-        List<Record> records = recordDao.getAllRecord();
-
-        // 按得分降序排序
-        records.sort((r1, r2) -> Integer.compare(r2.getScore(), r1.getScore()));
-
-        // 填充表格数据
-        int rank = 1;
-        for (Record record : records) {
-            Object[] rowData = {
-                    rank++,
-                    record.getName(),
-                    record.getScore(),
-                    record.getTime()
-            };
-            model.addRow(rowData);
-        }
-
-        // 创建表格
-        table1 = new JTable(model);
-        table1.setRowHeight(25);
-        table1.getColumnModel().getColumn(0).setPreferredWidth(50);  // 名次
-        table1.getColumnModel().getColumn(1).setPreferredWidth(100); // 玩家名
-        table1.getColumnModel().getColumn(2).setPreferredWidth(80);  // 得分
-        table1.getColumnModel().getColumn(3).setPreferredWidth(120); // 记录时间
+        // 创建表格（包含初始数据）
+        table1 = createRankingTable();
 
         // 表格放入滚动面板
         scoreTable = new JScrollPane(table1);
@@ -114,12 +90,79 @@ public class Marks {
         gbc.insets = new Insets(0, 10, 10, 10);
         mainPanel.add(deleteRecordButton, gbc);
 
+        // 删除按钮事件：删除选中的记录并刷新表格
         deleteRecordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int selectedRow = table1.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(mainPanel, "请先选中要删除的记录！", "提示", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                // 弹出确认对话框
+                String playerName = (String) table1.getValueAt(selectedRow, 1);
+                int score = (int) table1.getValueAt(selectedRow, 2);
+                int confirm = JOptionPane.showConfirmDialog(mainPanel,
+                        "确定要删除玩家 \"" + playerName + "\" 得分 " + score + " 的记录吗？",
+                        "确认删除", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
 
+                // 根据选中行获取对应的 Record 对象
+                Record selectedRecord = records.get(selectedRow);
+                // 从数据源删除
+                recordDao.doDelete(selectedRecord);
+                // 更新本地 records 列表
+                records.remove(selectedRecord);
+                // 刷新表格
+                refreshTable();
             }
         });
+    }
+
+    /**
+     * 根据 records 列表创建表格
+     */
+    private JTable createRankingTable() {
+        String[] columnNames = {"名次", "玩家名", "得分", "记录时间"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        int rank = 1;
+        for (Record record : records) {
+            Object[] rowData = {
+                    rank++,
+                    record.getName(),
+                    record.getScore(),
+                    record.getTime()
+            };
+            model.addRow(rowData);
+        }
+
+        JTable table = new JTable(model);
+        table.setRowHeight(25);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setPreferredWidth(80);
+        table.getColumnModel().getColumn(3).setPreferredWidth(120);
+        // 设置为单选模式
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return table;
+    }
+
+    /**
+     * 删除记录后刷新表格显示
+     */
+    private void refreshTable() {
+        // 用新的表格替换旧的
+        JTable newTable = createRankingTable();
+        scoreTable.setViewportView(newTable);
+        table1 = newTable;
     }
 
     public JPanel getMainPanel() {
