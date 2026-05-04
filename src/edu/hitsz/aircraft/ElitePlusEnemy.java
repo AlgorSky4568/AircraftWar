@@ -16,6 +16,8 @@ import java.util.Random;
 //精英敌人
 public class ElitePlusEnemy extends EnemyAircraft{
 
+    int bombFlat = 0;
+
     String[] propList = {"BloodProp", "BombProp", "BulletProp", "BulletPlusProp"};
     private ShootStrategy shootStrategy = new StraightShoot();
 
@@ -47,6 +49,7 @@ public class ElitePlusEnemy extends EnemyAircraft{
     @Override
     public void getBombProp() {
         this.hp = 0;
+        bombFlat = 1;
     }
 
     @Override
@@ -66,6 +69,9 @@ public class ElitePlusEnemy extends EnemyAircraft{
 
     @Override
     public BaseProp createProp(){
+        if(bombFlat == 1){
+            return null;
+        }
         Random random = new Random();
         int randomNum = random.nextInt(propList.length);
         return PropManager.createProp(propList[randomNum],getLocationX(),getLocationY(),0,2);

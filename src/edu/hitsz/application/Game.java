@@ -43,6 +43,7 @@ public class Game extends JPanel {
     private final String[] music = {"src/videos/bgm.wav","src/videos/bgm_boss.wav"};
     private final String[] sound = {"src/videos/bomb_explosion.wav","src/videos/bullet_hit.wav","src/videos/game_over.wav","src/videos/get_supply.wav"};
 
+    int[] randomCreateProp = {0,1};
 
     //屏幕中出现的敌机最大数量
     private final int enemyMaxNumber = 5;
@@ -258,7 +259,8 @@ public class Game extends JPanel {
                         }
                         else{
                             BaseProp newProp = enemyAircraft.createProp();
-                            if (newProp != null && props.size() < maxPropsOnField) {
+                            int randomProp = rand.nextInt(randomCreateProp.length);
+                            if (newProp != null && props.size() < maxPropsOnField && randomProp == 1) {
                                 props.add(newProp);
                             }
                         }
