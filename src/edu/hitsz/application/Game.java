@@ -26,7 +26,7 @@ import java.util.Random;
  * 游戏主面板，游戏启动
  * @author hitsz
  */
-public abstract class Game extends JPanel {
+public class Game extends JPanel {
 
     private int backGroundTop = 0;
 
@@ -57,7 +57,8 @@ public abstract class Game extends JPanel {
     private int hero_shootCounter = 0;
     protected final double enemy_shootCycle = 20;
     private int enemy_shootCounter = 0;
-    private int boss_count = 1;
+    private int boss_count = 0;
+    private int bossScoreCount = 1;
 
     //不同难度标志，0为简单，1为普通，2为困难
     private int difficulty_flag = 0;
@@ -75,6 +76,7 @@ public abstract class Game extends JPanel {
     private final java.util.Random rand = new java.util.Random();
     private final double propSpawnRate = 0.25; // 25% 概率产生道具
     private final int maxPropsOnField = 5;
+    private final int maxBossCount = 1;
     //敌机生成相关
     Random random = new Random();
     final String[] EnemyList = {"Mob", "Elite", "ElitePlus","ElitePro"};
@@ -150,9 +152,10 @@ public abstract class Game extends JPanel {
                     }
                 }
 
-                if(score  >= boss_count * 300){
-                    enemyAircrafts.add(bossFactory.createEnemy(0,100));
-                    boss_count ++;
+                if(score >= bossScoreCount * 400 &&  boss_count < maxBossCount){
+                    boss_count++;
+                    bossScoreCount+=2;
+                    enemyAircrafts.add(bossFactory.createEnemy(0,1000));
                     // 切换Boss音乐：停止旧线程，创建并启动新线程
                     musicThread.changeStopFlag();
                     musicThread = new MusicThread(music[1]);
@@ -250,6 +253,7 @@ public abstract class Game extends JPanel {
                         score += enemyAircraft.addScore();
                         // 道具由敌机自行决定是否产生
                         if(enemyAircraft instanceof BossEnemy){
+                            boss_count--;
                             for(int i = 0; i < 3; i++){
                                 BaseProp newProp = enemyAircraft.createProp();
                                 props.add(newProp);
