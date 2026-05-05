@@ -26,7 +26,7 @@ import java.util.Random;
  * 游戏主面板，游戏启动
  * @author hitsz
  */
-public class Game extends JPanel {
+public abstract class Game extends JPanel {
 
     private int backGroundTop = 0;
 
@@ -49,16 +49,22 @@ public class Game extends JPanel {
     private final int enemyMaxNumber = 5;
 
     //敌机生成周期
-    protected final double enemySpawnCycle  =  20;
+    protected double enemySpawnCycle  =  20;
     private int enemySpawnCounter = 0;
 
     //英雄机和敌机射击周期
-    protected final double hero_shootCycle = 20;
+    protected double hero_shootCycle = 20;
     private int hero_shootCounter = 0;
-    protected final double enemy_shootCycle = 20;
+    protected double enemy_shootCycle = 20;
     private int enemy_shootCounter = 0;
-    private int boss_count = 0;
+    protected int boss_count = 0;
     private int bossScoreCount = 1;
+    protected int speedY = 10;
+    protected int hp = 10;
+    protected int boss_hp = 1000;
+    protected int ifIncreaseBossHp = 0;
+    protected int increaseHp = 0;
+    protected int bossThreshold = 400;
 
     //不同难度标志，0为简单，1为普通，2为困难
     private int difficulty_flag = 0;
@@ -138,24 +144,30 @@ public class Game extends JPanel {
                     int randomNum = random.nextInt(EnemyList.length);
                     switch(EnemyList[randomNum]){
                         case "Mob":
-                            enemyAircrafts.add(mobFactory.createEnemy(10,10));
+                            enemyAircrafts.add(mobFactory.createEnemy(speedY,hp));
                             break;
                         case "Elite":
-                            enemyAircrafts.add(eliteFactory.createEnemy(10,20));
+                            enemyAircrafts.add(eliteFactory.createEnemy(speedY,2*hp));
                             break;
                         case "ElitePlus":
-                            enemyAircrafts.add(elitePlusFactory.createEnemy(10,30));
+                            enemyAircrafts.add(elitePlusFactory.createEnemy(speedY,3*hp));
                             break;
                         case "ElitePro":
-                            enemyAircrafts.add(eliteProFactory.createEnemy(10,40));
+                            enemyAircrafts.add(eliteProFactory.createEnemy(speedY,4*hp));
                             break;
                     }
                 }
 
-                if(score >= bossScoreCount * 400 &&  boss_count < maxBossCount){
+                if(score >= bossScoreCount * bossThreshold &&  boss_count < maxBossCount){
+                    if(ifIncreaseBossHp == 0){
+                        enemyAircrafts.add(bossFactory.createEnemy(0,boss_hp));
+                    }
+                    else{
+                        enemyAircrafts.add(bossFactory.createEnemy(0,(1+increaseHp) * boss_hp));
+                    }
                     boss_count++;
                     bossScoreCount+=2;
-                    enemyAircrafts.add(bossFactory.createEnemy(0,1000));
+                    increaseHp++;
                     // 切换Boss音乐：停止旧线程，创建并启动新线程
                     musicThread.changeStopFlag();
                     musicThread = new MusicThread(music[1]);
