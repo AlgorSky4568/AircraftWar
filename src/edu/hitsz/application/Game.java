@@ -46,11 +46,20 @@ public abstract class Game extends JPanel {
     int[] randomCreateProp = {0,1};
 
     //屏幕中出现的敌机最大数量
-    private final int enemyMaxNumber = 5;
+    protected int enemyMaxNumber = 5;
 
     //敌机生成周期
     protected double enemySpawnCycle  =  20;
     private int enemySpawnCounter = 0;
+
+    // 游戏循环计数，用于随时间动态调整难度
+    protected int gameCycleCount = 0;
+    // 敌机生成周期最小值，防止周期无限缩短
+    protected double minEnemySpawnCycle = 5;
+    protected int maxEnemySpeedY = 30;
+    protected int maxHp = 20;
+    protected int minHeroShootCycle = 5;
+    protected int minEnemyShootCycle = 5;
 
     //英雄机和敌机射击周期
     protected double hero_shootCycle = 20;
@@ -86,6 +95,7 @@ public abstract class Game extends JPanel {
     //敌机生成相关
     Random random = new Random();
     final String[] EnemyList = {"Mob", "Elite", "ElitePlus","ElitePro"};
+    protected double[] probabilities = {0.25, 0.25, 0.25, 0.25};
     private final EnemyManager mobFactory = new ModEnemyFactory();
     private final EnemyManager eliteFactory = new EliteEnemyFactory();
     private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
@@ -137,24 +147,39 @@ public abstract class Game extends JPanel {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                // 更新游戏循环计数并动态调整难度参数
+                gameCycleCount++;
+                updateDifficulty();
+
                 //按周期随机产生敌机
                 enemySpawnCounter++;
                 if (enemySpawnCounter >=enemySpawnCycle) {
                     enemySpawnCounter = 0;
-                    int randomNum = random.nextInt(EnemyList.length);
-                    switch(EnemyList[randomNum]){
-                        case "Mob":
-                            enemyAircrafts.add(mobFactory.createEnemy(speedY,hp));
+                    double r = random.nextDouble();
+                    double cumulative = 0.0;
+                    int randomNum = 0;
+                    for (int i = 0; i < probabilities.length; i++) {
+                        cumulative += probabilities[i];
+                        if (r < cumulative) {
+                            randomNum = i;
                             break;
-                        case "Elite":
-                            enemyAircrafts.add(eliteFactory.createEnemy(speedY,2*hp));
-                            break;
-                        case "ElitePlus":
-                            enemyAircrafts.add(elitePlusFactory.createEnemy(speedY,3*hp));
-                            break;
-                        case "ElitePro":
-                            enemyAircrafts.add(eliteProFactory.createEnemy(speedY,4*hp));
-                            break;
+                        }
+                    }
+                    if(enemyAircrafts.size() < enemyMaxNumber) {
+                        switch (EnemyList[randomNum]) {
+                            case "Mob":
+                                enemyAircrafts.add(mobFactory.createEnemy(speedY, hp));
+                                break;
+                            case "Elite":
+                                enemyAircrafts.add(eliteFactory.createEnemy(speedY, 2 * hp));
+                                break;
+                            case "ElitePlus":
+                                enemyAircrafts.add(elitePlusFactory.createEnemy(speedY, 3 * hp));
+                                break;
+                            case "ElitePro":
+                                enemyAircrafts.add(eliteProFactory.createEnemy(speedY, 4 * hp));
+                                break;
+                        }
                     }
                 }
 
@@ -194,10 +219,19 @@ public abstract class Game extends JPanel {
 
     }
 
+
+
     //***********************
     //      Action 各部分
     //***********************
 
+    /**
+     * 动态调整游戏难度参数，子类可重写此方法实现不同的难度变化逻辑
+     * 默认实现为空（不调整）
+     */
+    protected void updateDifficulty() {
+        // 子类可重写此方法以动态调整敌机产生周期等参数
+    }
     private void shootAction() {
         hero_shootCounter++;
         enemy_shootCounter++;
