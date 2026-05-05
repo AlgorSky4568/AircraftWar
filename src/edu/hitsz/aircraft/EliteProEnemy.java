@@ -72,7 +72,7 @@ public class EliteProEnemy extends EnemyAircraft{
 
     @Override
     public void getBombProp() {
-        this.hp -= 20;
+        decreaseHp(20);
         if(this.hp <= 0){
             bombFlag = 1;
         }
