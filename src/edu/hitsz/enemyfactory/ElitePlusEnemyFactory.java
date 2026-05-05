@@ -10,12 +10,12 @@ public class ElitePlusEnemyFactory implements EnemyManager{
     Random random = new Random();
     int[] randomList = {-3,3};
     @Override
-    public EnemyAircraft createEnemy(){
+    public EnemyAircraft createEnemy(int speedY,int hp){
         int randomNum = random.nextInt(randomList.length);
         return new ElitePlusEnemy((int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                 randomList[randomNum],
-                10,
-                30);
+                speedY,
+                hp);
     }
 }

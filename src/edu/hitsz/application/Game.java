@@ -26,7 +26,7 @@ import java.util.Random;
  * 游戏主面板，游戏启动
  * @author hitsz
  */
-public class Game extends JPanel {
+public abstract class Game extends JPanel {
 
     private int backGroundTop = 0;
 
@@ -120,7 +120,7 @@ public class Game extends JPanel {
     /**
      * 游戏启动入口，执行游戏逻辑
      */
-    public void action() {
+    public final void action() {
 
         // 启动背景音乐线程
         musicThread.start();
@@ -136,22 +136,22 @@ public class Game extends JPanel {
                     int randomNum = random.nextInt(EnemyList.length);
                     switch(EnemyList[randomNum]){
                         case "Mob":
-                            enemyAircrafts.add(mobFactory.createEnemy());
+                            enemyAircrafts.add(mobFactory.createEnemy(10,10));
                             break;
                         case "Elite":
-                            enemyAircrafts.add(eliteFactory.createEnemy());
+                            enemyAircrafts.add(eliteFactory.createEnemy(10,20));
                             break;
                         case "ElitePlus":
-                            enemyAircrafts.add(elitePlusFactory.createEnemy());
+                            enemyAircrafts.add(elitePlusFactory.createEnemy(10,30));
                             break;
                         case "ElitePro":
-                            enemyAircrafts.add(eliteProFactory.createEnemy());
+                            enemyAircrafts.add(eliteProFactory.createEnemy(10,40));
                             break;
                     }
                 }
 
                 if(score  >= boss_count * 300){
-                    enemyAircrafts.add(bossFactory.createEnemy());
+                    enemyAircrafts.add(bossFactory.createEnemy(0,100));
                     boss_count ++;
                     // 切换Boss音乐：停止旧线程，创建并启动新线程
                     musicThread.changeStopFlag();
