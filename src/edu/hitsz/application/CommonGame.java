@@ -2,6 +2,7 @@ package edu.hitsz.application;
 
 public class CommonGame extends Game{
     public CommonGame(){
+        difficulty_flag = 1;
         hero_shootCycle = 15;
         enemy_shootCycle = 15;
         enemySpawnCycle = 15;

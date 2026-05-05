@@ -76,7 +76,7 @@ public abstract class Game extends JPanel {
     protected int bossThreshold = 400;
 
     //不同难度标志，0为简单，1为普通，2为困难
-    private int difficulty_flag = 0;
+    protected int difficulty_flag = 0;
 
     //当前玩家分数
     private int score = 0;

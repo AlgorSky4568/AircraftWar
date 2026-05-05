@@ -2,6 +2,7 @@ package edu.hitsz.application;
 
 public class DifficultGame extends Game{
     public DifficultGame(){
+        difficulty_flag = 2;
         enemySpawnCycle = 10;
         speedY = 20;
         hp = 20;
