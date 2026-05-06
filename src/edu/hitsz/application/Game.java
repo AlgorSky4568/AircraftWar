@@ -224,14 +224,7 @@ public abstract class Game extends JPanel {
     //***********************
     //      Action 各部分
     //***********************
-
-    /**
-     * 动态调整游戏难度参数，子类可重写此方法实现不同的难度变化逻辑
-     * 默认实现为空（不调整）
-     */
-    protected void updateDifficulty() {
-        // 子类可重写此方法以动态调整敌机产生周期等参数
-    }
+    protected void updateDifficulty() {}
     private void shootAction() {
         hero_shootCounter++;
         enemy_shootCounter++;
@@ -423,22 +416,24 @@ public abstract class Game extends JPanel {
      * 重写 paint方法
      * 通过重复调用paint方法，实现游戏动画
      */
+
+    public void paintBackground(Graphics g,java.awt.Image image){
+        g.drawImage(image, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
+        g.drawImage(image, 0, this.backGroundTop, null);
+    }
     @Override
     public void paint(Graphics g) {
         super.paint(g);
 
         // 绘制背景,图片滚动
         if(difficulty_flag == 0) {
-            g.drawImage(ImageManager.BACKGROUND_IMAGE1, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-            g.drawImage(ImageManager.BACKGROUND_IMAGE1, 0, this.backGroundTop, null);
+            paintBackground(g,ImageManager.BACKGROUND_IMAGE1);
         }
         else if(difficulty_flag == 1){
-            g.drawImage(ImageManager.BACKGROUND_IMAGE2, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-            g.drawImage(ImageManager.BACKGROUND_IMAGE2, 0, this.backGroundTop, null);
+            paintBackground(g,ImageManager.BACKGROUND_IMAGE2);
         }
         else if(difficulty_flag == 2){
-            g.drawImage(ImageManager.BACKGROUND_IMAGE3, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
-            g.drawImage(ImageManager.BACKGROUND_IMAGE3, 0, this.backGroundTop, null);
+            paintBackground(g,ImageManager.BACKGROUND_IMAGE3);
         }
         this.backGroundTop += 1;
         if (this.backGroundTop == Main.WINDOW_HEIGHT) {
