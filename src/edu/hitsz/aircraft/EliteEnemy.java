@@ -2,22 +2,16 @@ package edu.hitsz.aircraft;
 
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.BaseProp;
-import edu.hitsz.shoot.ShootStrategy;
 import edu.hitsz.shoot.StraightShoot;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 //精英敌人
 public class EliteEnemy extends EnemyAircraft{
 
-    private ShootStrategy shootStrategy = new StraightShoot();
-
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+        super(locationX, locationY, speedX, speedY, hp, new StraightShoot());
     }
 
     @Override

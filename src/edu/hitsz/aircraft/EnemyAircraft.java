@@ -2,14 +2,15 @@ package edu.hitsz.aircraft;
 
 import edu.hitsz.application.Main;
 import edu.hitsz.prop.BaseProp;
+import edu.hitsz.shoot.ShootStrategy;
 
 /**
  * 敌机父类：统一管理敌机的道具掉落行为，默认不掉落，特殊敌机可覆盖 createProp()
  */
 public abstract class EnemyAircraft extends AbstractAircraft {
 
-    public EnemyAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+    public EnemyAircraft(int locationX, int locationY, int speedX, int speedY, int hp, ShootStrategy shootStrategy) {
+        super(locationX, locationY, speedX, speedY, hp, shootStrategy);
     }
 
     public BaseProp createProp() {

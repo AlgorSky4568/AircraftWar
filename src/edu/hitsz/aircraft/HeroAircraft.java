@@ -22,9 +22,6 @@ import java.util.List;
  */
 public class HeroAircraft extends AbstractAircraft {
 
-    private ShootStrategy shootStrategy1 = new StraightShoot();
-    private ShootStrategy shootStrategy2 = new ScatterShoot();
-    private ShootStrategy shootStrategy3 = new CircleShoot();
 
     //控制弹道，默认是0，散射是1，环射是2
     private int trajectoryFlag = 0;
@@ -33,8 +30,8 @@ public class HeroAircraft extends AbstractAircraft {
     private Thread powerUpThread = null;
 
     private volatile static HeroAircraft heroAircraft;
-    private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+    private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp, ShootStrategy shootStrategy) {
+        super(locationX, locationY, speedX, speedY, hp,shootStrategy);
         this.direction = -1;
         this.power = 50;
     }
@@ -46,7 +43,7 @@ public class HeroAircraft extends AbstractAircraft {
                 if(heroAircraft == null){
                     heroAircraft = new HeroAircraft(Main.WINDOW_WIDTH / 2,
                             Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-                            0, 0, 100);
+                            0, 0, 100,new StraightShoot());
                 }
             }
         }
@@ -88,13 +85,16 @@ public class HeroAircraft extends AbstractAircraft {
      */
     public List<BaseBullet> shoot() {
         if(trajectoryFlag == 1){
-            return shootStrategy2.shoot(this, direction, 3,power);
+            shootStrategy = new ScatterShoot();
+            return shootStrategy.shoot(this, direction, 3,power);
         }
         else if(trajectoryFlag == 2){
-            return shootStrategy3.shoot(this, direction, 20,power);
+            shootStrategy = new CircleShoot();
+            return shootStrategy.shoot(this, direction, 20,power);
         }
         else{
-            return shootStrategy1.shoot(this, direction, shootNum,power);
+            shootStrategy = new StraightShoot();
+            return shootStrategy.shoot(this, direction, shootNum,power);
         }
     }
 

@@ -26,12 +26,15 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     //子弹射击方向 (向上发射：-1，向下发射：1)
     protected int direction = 1;
 
+    protected ShootStrategy shootStrategy;
+
 
     //构造函数，初始化一个敌机
-    public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
+    public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp,ShootStrategy shootStrategy) {
         super(locationX, locationY, speedX, speedY);
         this.hp = hp;
         this.maxHp = hp;
+        this.shootStrategy = shootStrategy;
     }
 
     //控制血量下降的方法
