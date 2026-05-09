@@ -12,8 +12,7 @@ public class BombProp extends PropObservation{
         super(locationX, locationY, speedX, speedY);
     }
 
-    public void apply(HeroAircraft hero, BaseProp prop) {
-    }
+    public void apply(HeroAircraft hero, BaseProp prop) {}
     @Override
     public void trigger() {
         for(EnemyAircraft enemyAircraft:enemyAircrafts){

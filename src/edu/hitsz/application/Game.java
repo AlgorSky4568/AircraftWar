@@ -101,8 +101,6 @@ public abstract class Game extends JPanel {
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
     private MusicControl musicControl =  new MusicControl();
-    private PropObservation bomPropObservation = new BombPropObservation();
-    private PropObservation freezePropObservation = new FreezePropObservation();
 
     private final DAO recordDaoImpl = new RecordDaoImpl();
 
@@ -341,15 +339,15 @@ public abstract class Game extends JPanel {
                 prop.vanish();
                 if(prop instanceof BombProp){
                     musicControl.bombPropGet();
-                    bomPropObservation.setEnemyAircrafts(enemyAircrafts);
-                    bomPropObservation.setEnemyBullets(enemyBullets);
-                    bomPropObservation.trigger();
+                    ((BombProp) prop).setEnemyBullets(enemyBullets);
+                    ((BombProp) prop).setEnemyAircrafts(enemyAircrafts);
+                    ((BombProp) prop).trigger();
                 }
                 else if(prop instanceof FreezeProp){
                     musicControl.otherPropGet();
-                    freezePropObservation.setEnemyAircrafts(enemyAircrafts);
-                    freezePropObservation.setEnemyBullets(enemyBullets);
-                    freezePropObservation.trigger();
+                    ((FreezeProp) prop).setEnemyAircrafts(enemyAircrafts);
+                    ((FreezeProp) prop).setEnemyBullets(enemyBullets);
+                    ((FreezeProp) prop).trigger();
                 }
                 else{
                     musicControl.otherPropGet();
