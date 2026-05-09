@@ -1,5 +1,7 @@
 package edu.hitsz.application;
 
+import java.awt.*;
+
 public class DifficultGame extends Game{
     public DifficultGame(){
         difficulty_flag = 2;
@@ -31,5 +33,9 @@ public class DifficultGame extends Game{
         if (gameCycleCount % 500 == 0 && enemy_shootCycle > minEnemyShootCycle) {
             enemy_shootCycle--;
         }
+    }
+    @Override
+    public void paintBackgroundGraph(Graphics g){
+        paintBackground(g,ImageManager.BACKGROUND_IMAGE3);
     }
 }
