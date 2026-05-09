@@ -82,7 +82,7 @@ public class HeroAircraft extends AbstractAircraft {
     }
 
     @Override
-    /**
+    /*
      * 通过射击产生子弹
      * @return 射击出的子弹List
      */
