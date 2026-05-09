@@ -21,7 +21,7 @@ public class CircleShoot implements ShootStrategy {
                 double angle = Math.toRadians(i * 18); // 360 / 20 = 18 degrees
                 int speedX = (int) (speed * Math.cos(angle));
                 int speedY = (int) (speed * Math.sin(angle));
-                BaseBullet bullet = new HeroBullet(x, y, speedX, speedY, power);
+                BaseBullet bullet = new HeroBullet(x, y, speedX, speedY, abstractAircraft.getPower());
                 res.add(bullet);
             }
             return res;
@@ -31,7 +31,7 @@ public class CircleShoot implements ShootStrategy {
                 double angle = Math.toRadians(i * 18); // 360 / 20 = 18 degrees
                 int speedX = (int) (speed * Math.cos(angle));
                 int speedY = (int) (speed * Math.sin(angle));
-                BaseBullet bullet = new EnemyBullet(x, y, speedX, speedY, power);
+                BaseBullet bullet = new EnemyBullet(x, y, speedX, speedY, abstractAircraft.getPower());
                 res.add(bullet);
             }
             return res;

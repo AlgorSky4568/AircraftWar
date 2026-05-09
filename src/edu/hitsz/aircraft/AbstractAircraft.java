@@ -49,6 +49,15 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     public int getHp() {
         return hp;
     }
+    public int getPower(){
+        return power;
+    }
+    public int getDirection(){
+        return direction;
+    }
+    public int getShootNum(){
+        return shootNum;
+    }
 
 
     /**

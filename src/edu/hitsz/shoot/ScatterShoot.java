@@ -11,6 +11,7 @@ import java.util.List;
 
 public class ScatterShoot implements ShootStrategy{
     public List<BaseBullet> shoot(AbstractAircraft abstractAircraft, int direction, int shootNum, int power) {
+        power = abstractAircraft.getPower();
         List<BaseBullet> res = new LinkedList<>();
         int x = abstractAircraft.getLocationX();
         int y = abstractAircraft.getLocationY() + direction*2;
