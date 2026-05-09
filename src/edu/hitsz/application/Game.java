@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.*;
 import java.util.Random;
 
 /**
@@ -421,20 +420,14 @@ public abstract class Game extends JPanel {
         g.drawImage(image, 0, this.backGroundTop - Main.WINDOW_HEIGHT, null);
         g.drawImage(image, 0, this.backGroundTop, null);
     }
+    public void paintBackgroundGraph(Graphics g){}
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
 
+        paintBackgroundGraph(g);
         // 绘制背景,图片滚动
-        if(difficulty_flag == 0) {
-            paintBackground(g,ImageManager.BACKGROUND_IMAGE1);
-        }
-        else if(difficulty_flag == 1){
-            paintBackground(g,ImageManager.BACKGROUND_IMAGE2);
-        }
-        else if(difficulty_flag == 2){
-            paintBackground(g,ImageManager.BACKGROUND_IMAGE3);
-        }
         this.backGroundTop += 1;
         if (this.backGroundTop == Main.WINDOW_HEIGHT) {
             this.backGroundTop = 0;

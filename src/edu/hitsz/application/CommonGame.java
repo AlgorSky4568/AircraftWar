@@ -1,5 +1,7 @@
 package edu.hitsz.application;
 
+import java.awt.*;
+
 public class CommonGame extends Game{
     public CommonGame(){
         difficulty_flag = 1;
@@ -29,5 +31,9 @@ public class CommonGame extends Game{
         if (gameCycleCount % 500 == 0 && hp < maxHp) {
             hp++;
         }
+    }
+    @Override
+    public void paintBackgroundGraph(Graphics g){
+        paintBackground(g,ImageManager.BACKGROUND_IMAGE2);
     }
 }
