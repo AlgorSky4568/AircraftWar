@@ -1,7 +1,10 @@
 @startuml
 ' https://plantuml.com/class-diagram
 
-' Core domain
+' ============================================
+' Core domain - Flying Objects
+' ============================================
+
 abstract class AbstractFlyingObject {
     # locationX:int
     # locationY:int
@@ -11,8 +14,12 @@ abstract class AbstractFlyingObject {
     # width:int
     # height:int
     # isValid:boolean
+    # frozen:boolean
+    # freezeCountdown:int
 
+    + AbstractFlyingObject()
     + AbstractFlyingObject(int locationX, int locationY, int speedX, int speedY)
+    + setFrozen(int durationTicks):void
     + forward():void
     + crash(AbstractFlyingObject):boolean
     + setLocation(double,double):void
@@ -32,68 +39,106 @@ abstract class AbstractAircraft {
     # shootNum:int
     # power:int
     # direction:int
+    # shootStrategy:ShootStrategy
 
-    + AbstractAircraft(int locationX,int locationY,int speedX,int speedY,int hp)
+    + AbstractAircraft(int locationX,int locationY,int speedX,int speedY,int hp,ShootStrategy shootStrategy)
     + decreaseHp(int):void
     + getHp():int
+    + getPower():int
+    + getDirection():int
+    + getShootNum():int
     + {abstract} shoot():List<BaseBullet>
 }
 
 class EnemyAircraft {
-    + EnemyAircraft(int locationX,int locationY,int speedX,int speedY,int hp)
+    + EnemyAircraft(int locationX,int locationY,int speedX,int speedY,int hp,ShootStrategy shootStrategy)
     + createProp():BaseProp
     + forward_x():void
     + {abstract} addScore():int
+    + {abstract} getBombProp():void
+    + {abstract} getFreezeProp():void
 }
 
 AbstractFlyingObject <|-- AbstractAircraft
 AbstractAircraft <|-- EnemyAircraft
 
+' ============================================
 ' Hero
-class HeroAircraft {
-    - shootNum:int
-    - power:int
-    - direction:int
-    - trajectoryFlag:int
-    - shootStrategy1:ShootStrategy
-    - shootStrategy2:ShootStrategy
-    - shootStrategy3:ShootStrategy
+' ============================================
 
-    + getHeroAircraft():HeroAircraft
+class HeroAircraft {
+    - trajectoryFlag:int
+    - powerUpThread:Thread
+    - {static} heroAircraft:HeroAircraft
+
+    + {static} getHeroAircraft():HeroAircraft
     + forward():void
     + shoot():List<BaseBullet>
     + changeTrajectory(BaseProp):void
     + recoverTrajectory():void
     + addHp(int):void
 }
-AbstractAircraft <|-- HeroAircraft
-HeroAircraft o--> ShootStrategy
 
+AbstractAircraft <|-- HeroAircraft
+
+' ============================================
 ' Enemy types
+' ============================================
+
 class MobEnemy {
     + MobEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
+    + addScore():int
+    + getBombProp():void
+    + getFreezeProp():void
 }
+
 class EliteEnemy {
     + EliteEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
+    + addScore():int
+    + getBombProp():void
+    + getFreezeProp():void
 }
+
 class ElitePlusEnemy {
+    - bombFlat:int
+    - propList:String[]
+
     + ElitePlusEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
+    + createProp():BaseProp
+    + addScore():int
+    + getBombProp():void
+    + getFreezeProp():void
 }
+
 class EliteProEnemy {
+    - bombFlag:int
+    - propList:String[]
+
     + EliteProEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
+    + createProp():BaseProp
+    + addScore():int
+    + getBombProp():void
+    + getFreezeProp():void
 }
+
 class BossEnemy {
+    - propList:String[]
+
     + BossEnemy(int,int,int,int,int)
     + forward():void
     + shoot():List<BaseBullet>
+    + createProp():BaseProp
+    + addScore():int
+    + getBombProp():void
+    + getFreezeProp():void
 }
 
 EnemyAircraft <|-- MobEnemy
@@ -102,53 +147,142 @@ EnemyAircraft <|-- ElitePlusEnemy
 EnemyAircraft <|-- EliteProEnemy
 EnemyAircraft <|-- BossEnemy
 
+' ============================================
+' PowerUpTimer
+' ============================================
+
+class PowerUpTimer {
+    - hero:HeroAircraft
+    - running:boolean
+
+    + PowerUpTimer(HeroAircraft)
+    + stop():void
+    + run():void
+}
+
+' PowerUpTimer is used by HeroAircraft
+HeroAircraft ..> PowerUpTimer
+
+' ============================================
 ' Bullets
+' ============================================
+
 abstract class BaseBullet {
     - power:int
+
     + BaseBullet(int,int,int,int,int)
     + forward():void
     + getPower():int
+    + {abstract} getBombProp():void
+    + {abstract} getFreezeProp():void
 }
-class HeroBullet
-class EnemyBullet
+
+class HeroBullet {
+    + HeroBullet(int,int,int,int,int)
+    + getBombProp():void
+    + getFreezeProp():void
+}
+
+class EnemyBullet {
+    + EnemyBullet(int,int,int,int,int)
+    + getBombProp():void
+    + getFreezeProp():void
+}
+
+AbstractFlyingObject <|-- BaseBullet
 BaseBullet <|-- HeroBullet
 BaseBullet <|-- EnemyBullet
-AbstractFlyingObject <|-- BaseBullet
 
-' Props
+' ============================================
+' Props (Observer Pattern)
+' ============================================
+
 abstract class BaseProp {
     + BaseProp(int,int,int,int)
     + forward():void
+    + {abstract} apply(HeroAircraft,BaseProp):void
+}
+
+abstract class PropObservation {
+    # enemyAircrafts:List<EnemyAircraft>
+    # enemyBullets:List<BaseBullet>
+
+    + PropObservation(int,int,int,int)
+    + addEnemyAircraft(EnemyAircraft):void
+    + addEnemyBullet(BaseBullet):void
+    + {abstract} trigger():void
+    + {abstract} setEnemyAircrafts(List<EnemyAircraft>):void
+    + {abstract} setEnemyBullets(List<BaseBullet>):void
+}
+
+class BloodProp {
+    - heal:int
+
+    + BloodProp(int,int,int,int,int)
     + apply(HeroAircraft,BaseProp):void
 }
-class BloodProp
-class BombProp
-class BulletProp
-class BulletPlusProp
-class FreezeProp
 
+class BulletProp {
+    + BulletProp(int,int,int,int)
+    + apply(HeroAircraft,BaseProp):void
+}
+
+class BulletPlusProp {
+    + BulletPlusProp(int,int,int,int)
+    + apply(HeroAircraft,BaseProp):void
+}
+
+class BombProp {
+    + BombProp(int,int,int,int)
+    + apply(HeroAircraft,BaseProp):void
+    + trigger():void
+    + setEnemyAircrafts(List<EnemyAircraft>):void
+    + setEnemyBullets(List<BaseBullet>):void
+}
+
+class FreezeProp {
+    + FreezeProp(int,int,int,int)
+    + apply(HeroAircraft,BaseProp):void
+    + trigger():void
+    + setEnemyAircrafts(List<EnemyAircraft>):void
+    + setEnemyBullets(List<BaseBullet>):void
+}
+
+AbstractFlyingObject <|-- BaseProp
+BaseProp <|-- PropObservation
 BaseProp <|-- BloodProp
-BaseProp <|-- BombProp
 BaseProp <|-- BulletProp
 BaseProp <|-- BulletPlusProp
-BaseProp <|-- FreezeProp
-AbstractFlyingObject <|-- BaseProp
+PropObservation <|-- BombProp
+PropObservation <|-- FreezeProp
 
-' Shooting strategy (Strategy pattern)
+' ============================================
+' Shoot Strategy (Strategy Pattern)
+' ============================================
+
 interface ShootStrategy {
-    + shoot(AbstractAircraft,int,int,int):List<BaseBullet>
+    + shoot(AbstractAircraft):List<BaseBullet>
 }
+
 class StraightShoot
 class ScatterShoot
 class CircleShoot
+
 ShootStrategy <|.. StraightShoot
 ShootStrategy <|.. ScatterShoot
 ShootStrategy <|.. CircleShoot
 
-' Enemy factory (Factory pattern)
+' AbstractAircraft composes ShootStrategy
+AbstractAircraft o--> ShootStrategy
+
+' ============================================
+' Enemy Factory (Factory Method Pattern)
+' ============================================
+
 interface EnemyManager {
-    + createEnemy():EnemyAircraft
+    + createEnemy(int speedY,int hp):EnemyAircraft
 }
+
 class ModEnemyFactory
 class EliteEnemyFactory
 class ElitePlusEnemyFactory
@@ -161,28 +295,249 @@ EnemyManager <|.. ElitePlusEnemyFactory
 EnemyManager <|.. EliteProEnemyFactory
 EnemyManager <|.. BossEnemyFactory
 
-' Application layer
-class PropManager {
-    + createProp(String,int,int,int,int):BaseProp
-}
-class ImageManager {
-    + get(Object):BufferedImage
-    + get(String):BufferedImage
-}
-class Game {
+' ============================================
+' Application layer - Game
+' ============================================
+
+abstract class Game {
+    - backGroundTop:int
+    - timer:Timer
+    - timeInterval:int
     - heroAircraft:HeroAircraft
     - enemyAircrafts:List<EnemyAircraft>
     - heroBullets:List<BaseBullet>
     - enemyBullets:List<BaseBullet>
     - props:List<BaseProp>
+    - randomCreateProp:int[]
+    # enemyMaxNumber:int
+    # enemySpawnCycle:double
+    - enemySpawnCounter:int
+    # gameCycleCount:int
+    # minEnemySpawnCycle:double
+    # maxEnemySpeedY:int
+    # maxHp:int
+    # minHeroShootCycle:int
+    # minEnemyShootCycle:int
+    # hero_shootCycle:double
+    - hero_shootCounter:int
+    # enemy_shootCycle:double
+    - enemy_shootCounter:int
+    # boss_count:int
+    - bossScoreCount:int
+    # speedY:int
+    # hp:int
+    # boss_hp:int
+    # ifIncreaseBossHp:int
+    # increaseHp:int
+    # bossThreshold:int
+    # difficulty_flag:int
+    - score:int
+    - userName:String
+    - gameOverFlag:boolean
+    - rand:Random
+    - maxPropsOnField:int
+    - maxBossCount:int
+    - random:Random
+    - EnemyList:String[]
+    # probabilities:double[]
     - mobFactory:EnemyManager
     - eliteFactory:EnemyManager
     - elitePlusFactory:EnemyManager
     - eliteProFactory:EnemyManager
     - bossFactory:EnemyManager
-    + action():void
+    - musicControl:MusicControl
+    - recordDaoImpl:DAO
+
+    + Game()
+    + {final} action():void
+    # updateDifficulty():void
+    + paintBackground(Graphics,Image):void
+    + {abstract} paintBackgroundGraph(Graphics):void
+    + paint(Graphics):void
 }
-class HeroController
+
+class SimpleGame {
+    + SimpleGame()
+    + paintBackgroundGraph(Graphics):void
+}
+
+class CommonGame {
+    + CommonGame()
+    # updateDifficulty():void
+    + paintBackgroundGraph(Graphics):void
+}
+
+class DifficultGame {
+    + DifficultGame()
+    # updateDifficulty():void
+    + paintBackgroundGraph(Graphics):void
+}
+
+Game <|-- SimpleGame
+Game <|-- CommonGame
+Game <|-- DifficultGame
+
+' ============================================
+' Supporting application classes
+' ============================================
+
+class HeroController {
+    - game:Game
+    - heroAircraft:HeroAircraft
+    - mouseAdapter:MouseAdapter
+
+    + HeroController(Game,HeroAircraft)
+}
+
+class ImageManager {
+    - {static} CLASSNAME_IMAGE_MAP:Map<String,BufferedImage>
+    + {static} BACKGROUND_IMAGE1:BufferedImage
+    + {static} BACKGROUND_IMAGE2:BufferedImage
+    + {static} BACKGROUND_IMAGE3:BufferedImage
+    + {static} HERO_IMAGE:BufferedImage
+    + {static} HERO_BULLET_IMAGE:BufferedImage
+    + {static} ENEMY_BULLET_IMAGE:BufferedImage
+    + {static} MOB_ENEMY_IMAGE:BufferedImage
+    + {static} Elite_ENEMY_IMAGE:BufferedImage
+    + {static} Elite_PLUS_ENEMY_IMAGE:BufferedImage
+    + {static} Elite_PRO_ENEMY_IMAGE:BufferedImage
+    + {static} BOSS_ENEMY_IMAGE:BufferedImage
+    + {static} BLOOD_PROP_IMAGE:BufferedImage
+    + {static} BOMB_PROP_IMAGE:BufferedImage
+    + {static} BULLET_PROP_IMAGE:BufferedImage
+    + {static} BULLET_PLUS_PROP_IMAGE:BufferedImage
+    + {static} FREEZE_PROP_IMAGE:BufferedImage
+    + {static} get(String):BufferedImage
+    + {static} get(Object):BufferedImage
+}
+
+class PropManager {
+    + {static} createProp(String,int,int,int,int):BaseProp
+}
+
+class Main {
+    + {static} WINDOW_WIDTH:int
+    + {static} WINDOW_HEIGHT:int
+    + {static} main(String[]):void
+}
+
+' ============================================
+' DAO Layer
+' ============================================
+
+interface DAO {
+    + doAdd(Record):void
+    + doDelete(Record):void
+    + getAllRecord():List<Record>
+    + fileWrite():void
+    + sortRecords():void
+    + printRecords():void
+}
+
+class Record {
+    - score:int
+    - name:String
+    - time:String
+
+    + Record(int,String)
+    + Record(int,String,String)
+    + getScore():int
+    + setScore(int):void
+    + getName():String
+    + setName(String):void
+    + setNowTime():String
+    + getTime():String
+}
+
+class RecordDaoImpl {
+    - records:List<Record>
+    - filePath:String
+
+    + RecordDaoImpl()
+    + doAdd(Record):void
+    + doDelete(Record):void
+    + getAllRecord():List<Record>
+    + fileWrite():void
+    + sortRecords():void
+    + printRecords():void
+}
+
+DAO <|.. RecordDaoImpl
+
+' ============================================
+' Swing UI
+' ============================================
+
+class Start {
+    - mainPanel:JPanel
+    - simpleButton:JButton
+    - commonButton:JButton
+    - difficultButton:JButton
+    - dialog:JDialog
+    - difficulty:int
+
+    + Start(JDialog)
+    + getDifficulty():int
+    + getMainPanel():JPanel
+}
+
+class Marks {
+    - mainPanel:JPanel
+    - table1:JTable
+    - scoreTable:JScrollPane
+    - deleteRecordButton:JButton
+    - difficultyLabel:JLabel
+    - rankingLAbel:JLabel
+    - recordDao:DAO
+    - records:List<Record>
+
+    + Marks(int)
+    + getMainPanel():JPanel
+}
+
+' ============================================
+' Music layer
+' ============================================
+
+class MusicControl {
+    - music:String[]
+    - sound:String[]
+    - musicThread:MusicThread
+
+    + bossCreate():void
+    + bossDie():void
+    + musicStart():void
+    + bulletCrash():void
+    + bombPropGet():void
+    + otherPropGet():void
+    + gameOver():void
+}
+
+class MusicThread {
+    - filename:String
+    - audioFormat:AudioFormat
+    - samples:byte[]
+    - stopFlag:boolean
+
+    + MusicThread(String)
+    + resetMusic(String):void
+    + changeStopFlag():void
+    + run():void
+}
+
+class SoundThread {
+    - filename:String
+    - audioFormat:AudioFormat
+    - samples:byte[]
+
+    + SoundThread(String)
+    + resetSound(String):void
+    + run():void
+}
+
+' ============================================
+' Relationships - Application layer
+' ============================================
 
 Game --> HeroAircraft
 Game --> EnemyAircraft
@@ -192,8 +547,33 @@ Game --> EnemyManager
 Game --> PropManager
 Game --> HeroController
 Game --> ImageManager
+Game --> MusicControl
+Game --> DAO
+
+HeroController --> Game
 HeroController --> HeroAircraft
-PropManager ..> BaseProp
+
+PropManager ..> BaseProp : <<create>>
 ImageManager ..> HeroAircraft
+ImageManager ..> MobEnemy
+ImageManager ..> EliteEnemy
+ImageManager ..> ElitePlusEnemy
+ImageManager ..> EliteProEnemy
+ImageManager ..> BossEnemy
+ImageManager ..> EnemyBullet
+ImageManager ..> HeroBullet
+ImageManager ..> BloodProp
+ImageManager ..> BombProp
+ImageManager ..> BulletProp
+ImageManager ..> BulletPlusProp
+ImageManager ..> FreezeProp
+
+MusicControl --> MusicThread
+MusicControl --> SoundThread
+
+Marks --> DAO
+Marks --> Record
+
+Start --> Main
 
 @enduml
