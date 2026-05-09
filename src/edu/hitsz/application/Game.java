@@ -7,6 +7,7 @@ import edu.hitsz.Swing.Marks;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.music.MusicControl;
 import edu.hitsz.music.MusicThread;
 import edu.hitsz.music.SoundThread;
 import edu.hitsz.prop.*;
@@ -39,7 +40,6 @@ public abstract class Game extends JPanel {
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<BaseProp> props;
-    private final String[] music = {"src/videos/bgm.wav","src/videos/bgm_boss.wav"};
     private final String[] sound = {"src/videos/bomb_explosion.wav","src/videos/bullet_hit.wav","src/videos/game_over.wav","src/videos/get_supply.wav"};
 
     int[] randomCreateProp = {0,1};
@@ -100,7 +100,7 @@ public abstract class Game extends JPanel {
     private final EnemyManager elitePlusFactory = new ElitePlusEnemyFactory();
     private final EnemyManager eliteProFactory = new EliteProEnemyFactory();
     private final EnemyManager bossFactory = new BossEnemyFactory();
-    private MusicThread musicThread = new MusicThread(music[0]);
+    private MusicControl musicControl =  new MusicControl();
     private PropObservation bomPropObservation = new BombPropObservation();
     private PropObservation freezePropObservation = new FreezePropObservation();
 
@@ -140,7 +140,7 @@ public abstract class Game extends JPanel {
     public final void action() {
 
         // 启动背景音乐线程
-        musicThread.start();
+        musicControl.musicStart();
 
         // 定时任务：绘制、对象产生、碰撞判定、及结束判定
         TimerTask task = new TimerTask() {
@@ -193,9 +193,7 @@ public abstract class Game extends JPanel {
                     bossScoreCount+=2;
                     increaseHp++;
                     // 切换Boss音乐：停止旧线程，创建并启动新线程
-                    musicThread.changeStopFlag();
-                    musicThread = new MusicThread(music[1]);
-                    musicThread.start();
+                    musicControl.bossCreate();
                 }
                 // 飞机发射子弹
                 shootAction();
@@ -283,7 +281,7 @@ public abstract class Game extends JPanel {
                 if (enemyAircraft.crash(bullet)) {
                     // 敌机撞击到英雄机子弹
                     // 敌机损失一定生命值
-                    new SoundThread(sound[1]).start();
+                    musicControl.bulletCrash();
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
@@ -297,9 +295,7 @@ public abstract class Game extends JPanel {
                                 props.add(newProp);
                             }
                             // Boss被击败，切回普通背景音乐
-                            musicThread.changeStopFlag();
-                            musicThread = new MusicThread(music[0]);
-                            musicThread.start();
+                            musicControl.bossDie();
                         }
                         else{
                             BaseProp newProp = enemyAircraft.createProp();
@@ -344,19 +340,19 @@ public abstract class Game extends JPanel {
                 prop.apply(heroAircraft,prop);
                 prop.vanish();
                 if(prop instanceof BombProp){
-                    new SoundThread(sound[0]).start();
+                    musicControl.bombPropGet();
                     bomPropObservation.setEnemyAircrafts(enemyAircrafts);
                     bomPropObservation.setEnemyBullets(enemyBullets);
                     bomPropObservation.trigger();
                 }
                 else if(prop instanceof FreezeProp){
-                    new SoundThread(sound[3]).start();
+                    musicControl.otherPropGet();
                     freezePropObservation.setEnemyAircrafts(enemyAircrafts);
                     freezePropObservation.setEnemyBullets(enemyBullets);
                     freezePropObservation.trigger();
                 }
                 else{
-                    new SoundThread(sound[3]).start();
+                    musicControl.otherPropGet();
                 }
             }
         }
@@ -385,7 +381,7 @@ public abstract class Game extends JPanel {
             timer.cancel(); // 取消定时器并终止所有调度任务
             gameOverFlag = true;
             System.out.println("Game Over!");
-            new SoundThread(sound[2]).start();
+            musicControl.gameOver();
 
             // 弹出姓名输入对话框
             SwingUtilities.invokeLater(() -> {
