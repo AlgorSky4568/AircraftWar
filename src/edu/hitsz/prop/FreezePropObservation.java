@@ -1,7 +1,6 @@
 package edu.hitsz.prop;
 
 import edu.hitsz.aircraft.EnemyAircraft;
-import edu.hitsz.application.PropObservation;
 import edu.hitsz.bullet.BaseBullet;
 
 import java.util.List;
