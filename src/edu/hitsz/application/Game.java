@@ -40,7 +40,6 @@ public abstract class Game extends JPanel {
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
     private final List<BaseProp> props;
-    private final String[] sound = {"src/videos/bomb_explosion.wav","src/videos/bullet_hit.wav","src/videos/game_over.wav","src/videos/get_supply.wav"};
 
     int[] randomCreateProp = {0,1};
 
@@ -88,7 +87,6 @@ public abstract class Game extends JPanel {
 
     // 道具相关
     private final java.util.Random rand = new java.util.Random();
-    private final double propSpawnRate = 0.25; // 25% 概率产生道具
     private final int maxPropsOnField = 5;
     private final int maxBossCount = 1;
     //敌机生成相关
@@ -104,11 +102,6 @@ public abstract class Game extends JPanel {
 
     private final DAO recordDaoImpl = new RecordDaoImpl();
 
-
-    public int getScore(){
-        return score;
-    }
-
     public Game() {
         heroAircraft = HeroAircraft.getHeroAircraft();
 
@@ -122,15 +115,6 @@ public abstract class Game extends JPanel {
 
         this.timer = new Timer("game-action-timer", true);
 
-    }
-
-    public void setDifficulty(int difficulty_flag){
-        this.difficulty_flag = difficulty_flag;
-    }
-
-    //更新用户姓名
-    public void setUserName(String userName){
-        this.userName = userName;
     }
     /**
      * 游戏启动入口，执行游戏逻辑
