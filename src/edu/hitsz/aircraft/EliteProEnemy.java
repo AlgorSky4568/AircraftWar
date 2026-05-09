@@ -47,7 +47,7 @@ public class EliteProEnemy extends EnemyAircraft{
 
     @Override
     public List<BaseBullet> shoot() {
-        return shootStrategy.shoot(this,direction,shootNum,power);
+        return shootStrategy.shoot(this);
     }
 
     @Override

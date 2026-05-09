@@ -62,9 +62,11 @@ public class HeroAircraft extends AbstractAircraft {
 
         if(prop instanceof BulletProp){
             trajectoryFlag = 1;
+            shootNum = 3;
         }
         else if(prop instanceof BulletPlusProp){
             trajectoryFlag = 2;
+            shootNum = 20;
         }
 
         // 启动新的10秒计时器
@@ -75,6 +77,7 @@ public class HeroAircraft extends AbstractAircraft {
 
     public void recoverTrajectory(){
         trajectoryFlag = 0;
+        shootNum = 1;
         powerUpThread = null;
     }
 
@@ -86,15 +89,15 @@ public class HeroAircraft extends AbstractAircraft {
     public List<BaseBullet> shoot() {
         if(trajectoryFlag == 1){
             shootStrategy = new ScatterShoot();
-            return shootStrategy.shoot(this, direction, 3,power);
+            return shootStrategy.shoot(this);
         }
         else if(trajectoryFlag == 2){
             shootStrategy = new CircleShoot();
-            return shootStrategy.shoot(this, direction, 20,power);
+            return shootStrategy.shoot(this);
         }
         else{
             shootStrategy = new StraightShoot();
-            return shootStrategy.shoot(this, direction, shootNum,power);
+            return shootStrategy.shoot(this);
         }
     }
 

@@ -10,8 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StraightShoot implements ShootStrategy{
-    public List<BaseBullet> shoot(AbstractAircraft abstractAircraft, int direction, int shootNum, int power) {
+    public List<BaseBullet> shoot(AbstractAircraft abstractAircraft) {
         List<BaseBullet> res = new LinkedList<>();
+        int direction = abstractAircraft.getDirection();
+        int shootNum = abstractAircraft.getShootNum();
+        int power = abstractAircraft.getPower();
         int x = abstractAircraft.getLocationX();
         int y = abstractAircraft.getLocationY() + direction*2;
         int speedX = 0;

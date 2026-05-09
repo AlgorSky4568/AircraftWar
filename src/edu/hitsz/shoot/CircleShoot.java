@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CircleShoot implements ShootStrategy {
     @Override
-    public List<BaseBullet> shoot(AbstractAircraft abstractAircraft, int direction, int shootNum, int power) {
+    public List<BaseBullet> shoot(AbstractAircraft abstractAircraft) {
         List<BaseBullet> res = new LinkedList<>();
         int x = abstractAircraft.getLocationX();
         int y = abstractAircraft.getLocationY();
